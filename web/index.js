@@ -305,6 +305,7 @@ wsServer.on('request', function(request) {
             console.log("A message from " + msg.name + " for " + msg.target);
             console.log(msg.text);
             console.log("--------------------------------");
+            sendToOneUser(msg.target, msg.text);
             break;
 
           // Username change
