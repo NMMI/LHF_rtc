@@ -299,6 +299,14 @@ wsServer.on('request', function(request) {
             msg.text = msg.text.replace(/(<([^>]+)>)/ig, "");
             break;
   
+          case "text-message":
+            console.log("--------------------------------");
+            console.log("Message in a bottle!");
+            console.log("A message from " + msg.name + " for " + msg.target);
+            console.log(msg.text);
+            console.log("--------------------------------");
+            break;
+
           // Username change
           case "username":
             var nameChanged = false;

@@ -68,11 +68,14 @@ const statusDiv = document.querySelector('div#status');
 
 const audioCheckbox = document.querySelector('input#audio');
 
+const messageButton = document.querySelector('button#messageBtn');
+const messageText = document.querySelector('input#messageText');
 // const startButton = document.querySelector('button#start');
 const callButton = document.querySelector('button#call');
 // const insertRelayButton = document.querySelector('button#insertRelay');
 const hangupButton = document.querySelector('button#hangup');
 
+messageButton.onclick = sendMessageButton;
 // startButton.onclick = start;
 callButton.onclick = call;
 // insertRelayButton.onclick = insertRelay;
@@ -794,4 +797,18 @@ function handleGetUserMediaError(e) {
   // ready to try again.
 
   closeVideoCall();
+}
+
+// Text message exchange
+function sendMessageButton()
+{
+  console.log('Pulsante premuto!');
+  console.log(`Message is ${messageText.value}`);
+  var message = { 
+    name: myUsername,
+    target: targetUsername,
+    type: "text-message",
+    text: messageText.value
+  };
+  sendToServer(message);
 }
