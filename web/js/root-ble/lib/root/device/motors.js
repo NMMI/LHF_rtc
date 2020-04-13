@@ -54,6 +54,7 @@ Object.assign(RootDeviceMotors.prototype, {
   },
 
   driveDistance: function (distance, callback) {
+    document.getElementById('log').innerHTML += '<br>Inside driveDistance!';
     var command = 8;
     var dataView = new DataView((new Uint8Array(4)).buffer);
     dataView.setInt32(0, distance, false);
