@@ -5,8 +5,8 @@ moveButton.onclick = move;
 
 function move() {
   console.log("Move button clicked");
-  // window.root.device.motors.setLeftAndRightMotorSpeed(50,50);
-  window.root.device.motors.driveDistance(-150,fatto);
+  // window.root.device.motors.setLeftAndRightMotorSpeed(50,50); // EPPUR SI MUOVE!
+  window.root.device.motors.driveDistance(-150,fatto); // DA TESTARE
 }
 
 
