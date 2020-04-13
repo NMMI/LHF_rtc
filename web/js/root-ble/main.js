@@ -1,5 +1,5 @@
 
-const moveButton = document.querySelector('button#moveBtn');
+const moveButton = document.getElementById('moveBtn');
 
 moveButton.onclick = move;
 
