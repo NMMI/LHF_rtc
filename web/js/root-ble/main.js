@@ -57,8 +57,8 @@ function runQueue(arr) {
 
 var go15cm = function (next) {
   document.getElementById('log').innerHTML += '<br>Trying 15 cm forward!';
-  // my_robot.device.motors.driveDistance(150, next);
-  window.root.device.motors.driveDistance(150, next, my_robot);
+  window.root.device.motors.driveDistance(150, next);
+  // window.root.device.motors.driveDistance(150, next, my_robot);
   document.getElementById('log').innerHTML += '<br>Should have moved 15 cm forward!';
 }
 var turn90deg = function (next) {
