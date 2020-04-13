@@ -59,6 +59,7 @@ Object.assign(RootDeviceMotors.prototype, {
     var dataView = new DataView((new Uint8Array(4)).buffer);
     dataView.setInt32(0, distance, false);
     var payload = new Uint8Array(dataView.buffer);
+    document.getElementById('log').innerHTML += '<br>Sending message .toRobot';
     this.root.toRobot(this.device, command, payload, this.driveDistanceFinishedResponse(callback), null); // no timeout
   },
   driveDistanceFinishedResponse: function (callback) {
