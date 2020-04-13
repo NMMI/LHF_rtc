@@ -49,6 +49,7 @@ function rootIsSetup (root) {
   console.log('start using root', root);
   window.root = root;
 
+  moveButton.disabled = false;
   // draw square example
   document.getElementById('log').innerHTML += '<br>Connected!';
 
@@ -61,7 +62,6 @@ function rootIsSetup (root) {
 
 function fatto()
 {
-  moveButton.disabled = false;
   console.log('OK!')
 }
 
