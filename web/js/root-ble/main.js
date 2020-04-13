@@ -3,13 +3,15 @@ window.LOG = 1;
 
 var bleDevice = new BleDevice(Root.identifier, Root.services);
 
+var my_robot = "";
+
 bleDevice.addEventListener('connected', function (event) {
   btnDisconnect.removeAttribute('disabled');
   btnScanAndConnect.setAttribute('disabled', 'disabled');
 
   var root = new Root(bleDevice);
   root.setup(rootIsSetup);
-
+  my_robot = root;
   // draw square example
   document.getElementById('log').innerHTML += '<br>Connected!';
   runQueue([go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg]);
@@ -53,11 +55,11 @@ function runQueue(arr) {
 
 var go15cm = function (next) {
   document.getElementById('log').innerHTML += '<br>Trying 15 cm forward!';
-  root.device.motors.driveDistance(150, next);
+  my_robot.device.motors.driveDistance(150, next);
   document.getElementById('log').innerHTML += '<br>Should have moved 15 cm forward!';
 }
 var turn90deg = function (next) {
   document.getElementById('log').innerHTML += '<br>Tring 90 deg rotation!';
-  root.device.motors.rotateAngel(900, next);
+  my_robot.device.motors.rotateAngel(900, next);
 }
 
