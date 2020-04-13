@@ -1,3 +1,0 @@
-[submodule "web/root-robot"]
-	path = web/root-robot
-	url = https://github.com/matths/root-robot-ble-javascript.git
