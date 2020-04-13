@@ -4,7 +4,7 @@ Tool to communicate with video and audio through the browser (works on LAN)
 # USERS - Manual installation
 
 ```
-npm install express; npm install websocket
+npm install express; npm install websocket; npm install nipplejs --save;
 ```
 
 To run:

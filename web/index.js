@@ -298,7 +298,25 @@ wsServer.on('request', function(request) {
             msg.name = connect.username;
             msg.text = msg.text.replace(/(<([^>]+)>)/ig, "");
             break;
-  
+
+          case "joyL-message":
+            //console.log("--------------------------------");
+            //console.log("JOYSTICK LEFT Message in a bottle!");
+            //console.log("A message from " + msg.name + " for " + msg.target);
+            //console.log(msg.value);
+            //console.log("--------------------------------");
+            sendToOneUser(msg.target, msg.value);
+          break;
+    
+          case "joyR-message":
+            //console.log("--------------------------------");
+            //console.log("JOYSTICK RIGHT Message in a bottle!");
+            //console.log("A message from " + msg.name + " for " + msg.target);
+            //console.log(msg.value);
+            //console.log("--------------------------------");
+            sendToOneUser(msg.target, msg.value);
+          break;
+
           case "text-message":
             console.log("--------------------------------");
             console.log("Message in a bottle!");

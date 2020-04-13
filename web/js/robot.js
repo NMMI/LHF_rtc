@@ -36,7 +36,7 @@ var transceiver = null;         // RTCRtpTransceiver
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-const SERVER_IP_ = "192.168.1.9";
+const SERVER_IP_ = "127.0.0.1";
 function startupCode()
 {
   console.log("Start me up");
@@ -512,6 +512,28 @@ function connect() {
       case "message":
         text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
         break;
+
+      case "joyL-message":
+            console.log("--------------------------------");
+            console.log("JOYSTICK LEFT Message in a bottle!");
+            console.log(msg.value);
+            console.log("--------------------------------");
+      break;
+
+      case "joyR-message":
+        console.log("--------------------------------");
+        console.log("JOYSTICK RIGHT Message in a bottle!");
+        console.log(msg.value);
+        console.log("--------------------------------");
+      break;
+
+      case "text-message":
+          console.log("--------------------------------");
+          console.log("Message in a bottle!");
+          console.log("A message from " + msg.name + " for " + msg.target);
+          console.log(msg.text);
+          console.log("--------------------------------");
+          break;
 
       case "rejectusername":
         myUsername = msg.name;

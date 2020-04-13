@@ -8,6 +8,8 @@
 
 'use strict';
 
+
+
 var myUsername = "PILOT";
 var targetUsername = "ROBOT";
 
@@ -26,6 +28,7 @@ var webcamStream = null;        // MediaStream from webcam
 var transceiver = null;         // RTCRtpTransceiver
 
 
+
 // function log(text) {
 //   var time = new Date();
 
@@ -35,7 +38,7 @@ var transceiver = null;         // RTCRtpTransceiver
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-const SERVER_IP_ = "192.168.1.9";
+const SERVER_IP_ = "127.0.0.1";
 function startupCode()
 {
   console.log("Start me up");
@@ -811,4 +814,44 @@ function sendMessageButton()
     text: messageText.value
   };
   sendToServer(message);
+}
+
+
+//Retrieve Joysticks values
+joystickL.on('start end', function(evt, dataL) { 
+                        sendMessageJoyL(dataL);
+                        }).on('move', function(evt, dataL) {
+                                          sendMessageJoyL(dataL);
+                                        });
+
+joystickR.on('start end', function(evt, dataR) { 
+                        sendMessageJoyR(dataR);
+                        }).on('move', function(evt, dataR) {
+                                          sendMessageJoyR(dataR);
+                                        });
+
+// Send Joystick value message
+function sendMessageJoyL(value_joyL)
+{
+  console.log(value_joyL.position);
+  var message_joy_L = { 
+    name: myUsername,
+    target: targetUsername,
+    type: "joyL-message",
+    value: value_joyL.position
+  };
+  sendToServer(message_joy_L);
+}
+
+
+function sendMessageJoyR(value_joyR)
+{
+  console.log(value_joyR.position);
+  var message_joy_R = { 
+    name: myUsername,
+    target: targetUsername,
+    type: "joyR-message",
+    value: value_joyR.position
+  };
+  sendToServer(message_joy_R);
 }
