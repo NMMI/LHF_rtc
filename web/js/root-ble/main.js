@@ -12,7 +12,7 @@ bleDevice.addEventListener('connected', function (event) {
   var root = new Root(bleDevice);
   root.setup(rootIsSetup);
   // my_robot = root;
-
+  console.log('Robot connected OK');
 });
 
 bleDevice.addEventListener('disconnected', function (event) {
