@@ -11,6 +11,7 @@ bleDevice.addEventListener('connected', function (event) {
   root.setup(rootIsSetup);
 
   // draw square example
+  document.getElementById('log').innerHTML += '<br>Connected!';
   runQueue([go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg]);
 });
 
@@ -41,6 +42,7 @@ function rootIsSetup (root) {
 
 // draw square example
 function runQueue(arr) {
+  document.getElementById('log').innerHTML += '<br>Starting motion command queue!';
   var fnc = arr.shift();
   var next = function () { runQueue(arr); };
   if (arr.length<=0) {
@@ -50,9 +52,11 @@ function runQueue(arr) {
 }
 
 var go15cm = function (next) {
+  document.getElementById('log').innerHTML += '<br>Tring 15 cm forward!';
   root.device.motors.driveDistance(150, next);
 }
 var turn90deg = function (next) {
+  document.getElementById('log').innerHTML += '<br>Tring 90 deg rotation!';
   root.device.motors.rotateAngel(900, next);
 }
 
