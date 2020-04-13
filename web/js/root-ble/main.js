@@ -1,4 +1,15 @@
 
+const moveButton = document.querySelector('button#moveBtn');
+
+moveButton.onclick = move;
+
+function move() {
+  console.log("Move button clicked");
+  window.root.device.motors.setLeftAndRightMotorSpeed(50,50);
+}
+
+
+
 window.LOG = 1;
 
 var bleDevice = new BleDevice(Root.identifier, Root.services);
@@ -50,6 +61,7 @@ function rootIsSetup (root) {
 
 function fatto()
 {
+  moveButton.enabled = true;
   console.log('OK!')
 }
 
