@@ -40,7 +40,10 @@ Object.assign(Root.prototype, {
       bleProfile['root'].service['UART'].UUID,
       bleProfile['root'].service['UART'].characteristic['TX'].UUID,
       function (characteristic) {
+        console.log('Root setup function: assigning tx');
         self.tx = characteristic;
+        console.log(`characteristic ${characteristic}`);
+        console.log(`self.tx ${self.tx}`);
 
         self.bleDevice.getCharacteristicByServiceUuidAndCharacteristicUuid(
           bleProfile['root'].service['UART'].UUID,
