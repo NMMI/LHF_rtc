@@ -42,11 +42,15 @@ function rootIsSetup (root) {
   document.getElementById('log').innerHTML += '<br>Connected!';
 
   console.log('Muovo 15 cm');
-  window.root.device.motors.driveDistance(150, next);
+  window.root.device.motors.driveDistance(150,fatto);
   console.log('Fine 15 cm');
   // runQueue([go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg]);
 }
 
+function fatto()
+{
+  console.log('OK!')
+}
 
 // draw square example
 function runQueue(arr) {
