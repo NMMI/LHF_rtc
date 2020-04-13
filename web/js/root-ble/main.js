@@ -61,7 +61,7 @@ function rootIsSetup (root) {
 
 function fatto()
 {
-  moveButton.enabled = true;
+  moveButton.disabled = false;
   console.log('OK!')
 }
 
