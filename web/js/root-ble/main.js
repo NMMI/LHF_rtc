@@ -56,13 +56,17 @@ function runQueue(arr) {
 }
 
 var go15cm = function (next) {
+  console.log('Begin of go15cm');
   document.getElementById('log').innerHTML += '<br>Trying 15 cm forward!';
   window.root.device.motors.driveDistance(150, next);
   // window.root.device.motors.driveDistance(150, next, my_robot);
   document.getElementById('log').innerHTML += '<br>Should have moved 15 cm forward!';
+  console.log('End of go15cm');
 }
 var turn90deg = function (next) {
+  console.log('Begin of turn90deg');
   document.getElementById('log').innerHTML += '<br>Tring 90 deg rotation!';
   window.root.device.motors.rotateAngel(900, next);
+  console.log('End of turn90deg');
 }
 
