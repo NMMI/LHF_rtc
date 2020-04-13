@@ -62,6 +62,7 @@ Object.assign(RootDeviceMotors.prototype, {
     this.root.toRobot(this.device, command, payload, this.driveDistanceFinishedResponse(callback), null); // no timeout
   },
   driveDistanceFinishedResponse: function (callback) {
+    document.getElementById('log').innerHTML += '<br>Inside driveDistanceFinishedResponse!';
     return callback;
   },
 
