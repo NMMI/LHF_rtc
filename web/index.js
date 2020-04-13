@@ -34,7 +34,7 @@ app_roomba.use(express.static(__dirname));
 
 app_roomba.get("/", function(req, res) {
     console.log("Pilot is connecting");
-    res.sendFile(path.resolve(__dirname,'root-robot/index.html'));
+    res.sendFile(path.resolve(__dirname,'root-ble.html'));
 
 });
 
