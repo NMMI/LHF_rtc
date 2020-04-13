@@ -43,7 +43,7 @@ function rootIsSetup (root) {
 
   console.log('Muovo 15 cm');
   // window.root.device.motors.driveDistance(150,fatto);
-  root.device.motors.setLeftAndRightMotorSpeed(50,50);
+  // root.device.motors.setLeftAndRightMotorSpeed(50,50);
   console.log('Fine 15 cm');
   // runQueue([go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg]);
 }
