@@ -56,8 +56,6 @@ Object.assign(Root.prototype, {
             doneCallback(self);
           });
       });
-    console.log(`self.tx at the end of setup: ${self.tx}`);
-    console.log(`this.tx at the end of setup: ${this.tx}`);
   },
 
   crcCheck: function (dataView) {
@@ -129,7 +127,6 @@ Object.assign(Root.prototype, {
     }
 
     this.log('SENT', new Uint8Array(dataView.buffer));
-    console.log(`this.tx ${this.tx}`);
     this.tx.writeValue(message.buffer);
   },
 
