@@ -27,6 +27,31 @@ const options = {
     cert: fs.readFileSync(path.resolve(__dirname,'security/server.crt'))
 }
 
+// roomba bluetooth setup page
+var app_roomba = express();
+
+app_roomba.use(express.static(__dirname));
+
+app_roomba.get("/", function(req, res) {
+    console.log("Pilot is connecting");
+    res.sendFile(path.resolve(__dirname,'root-robot/index.html'));
+
+});
+
+var bodyParser_roomba = require("body-parser");
+app_roomba.use(bodyParser_roomba.urlencoded({ extended: false }));
+
+app_roomba.post("/", function(req,res){
+    console.log("Received POST request from Pilot");
+});
+
+const port_roomba = 3333;
+
+var server_roomba = https.createServer(options,app_roomba);
+console.log("Pilot page listening on port: ", port_roomba);
+
+server_roomba.listen(port_roomba);
+
 // pilot setup page
 var app_pilot = express();
 
