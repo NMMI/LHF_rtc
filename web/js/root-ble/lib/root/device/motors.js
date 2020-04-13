@@ -61,6 +61,8 @@ Object.assign(RootDeviceMotors.prototype, {
     dataView.setInt32(0, distance, false);
     var payload = new Uint8Array(dataView.buffer);
     document.getElementById('log').innerHTML += '<br>Sending message .toRobot';
+    console.log(`my_robot is ${my_robot}`);
+    console.log(`this.root is ${this.root}`);
     my_robot.toRobot(this.device, command, payload, this.driveDistanceFinishedResponse(callback), null); // no timeout
     // this.root.toRobot(this.device, command, payload, this.driveDistanceFinishedResponse(callback), null); // no timeout
   },
