@@ -34,6 +34,7 @@ Object.assign(Root.prototype, {
   },
 
   setup: function (doneCallback) {
+    console.log('Root setup function');
     var self = this;
     this.bleDevice.getCharacteristicByServiceUuidAndCharacteristicUuid(
       bleProfile['root'].service['UART'].UUID,
