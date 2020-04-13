@@ -56,6 +56,8 @@ Object.assign(Root.prototype, {
             doneCallback(self);
           });
       });
+    console.log(`self.tx at the end of setup: ${self.tx}`);
+    console.log(`this.tx at the end of setup: ${this.tx}`);
   },
 
   crcCheck: function (dataView) {
