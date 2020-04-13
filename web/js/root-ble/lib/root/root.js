@@ -123,6 +123,7 @@ Object.assign(Root.prototype, {
     }
 
     this.log('SENT', new Uint8Array(dataView.buffer));
+    console.log(`this.tx ${this.tx}`);
     this.tx.writeValue(message.buffer);
   },
 
