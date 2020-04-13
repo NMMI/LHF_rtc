@@ -11,7 +11,7 @@ bleDevice.addEventListener('connected', function (event) {
 
   var root = new Root(bleDevice);
   root.setup(rootIsSetup);
-  my_robot = root;
+  // my_robot = root;
   // draw square example
   document.getElementById('log').innerHTML += '<br>Connected!';
   runQueue([go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg]);
@@ -38,6 +38,8 @@ function disconnect (event) {
 
 function rootIsSetup (root) {
   console.log('start using root', root);
+  const newLocal = "<br>start using root" + root;
+  document.getElementById('log').innerHTML += newLocal;
   window.root = root;
 }
 
@@ -55,11 +57,11 @@ function runQueue(arr) {
 
 var go15cm = function (next) {
   document.getElementById('log').innerHTML += '<br>Trying 15 cm forward!';
-  my_robot.device.motors.driveDistance(150, next);
+  window.root.device.motors.driveDistance(150, next);
   document.getElementById('log').innerHTML += '<br>Should have moved 15 cm forward!';
 }
 var turn90deg = function (next) {
   document.getElementById('log').innerHTML += '<br>Tring 90 deg rotation!';
-  my_robot.device.motors.rotateAngel(900, next);
+  window.root.device.motors.rotateAngel(900, next);
 }
 
