@@ -14,7 +14,7 @@ var targetUsername = "PILOT";
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: true,            // We want an audio track
+  audio: false,            // We want an audio track
   video: true
   // video: {
   //   aspectRatio: {
@@ -25,6 +25,13 @@ var mediaConstraints = {
 
 var webcamStream = null;        // MediaStream from webcam
 var transceiver = null;         // RTCRtpTransceiver
+
+var vel_Left = 0.0;
+var vel_Right = 0.0;
+var vel_lin = 0.0;
+var vel_ang = 0.0;
+const W_wheel = 0.30;
+const R_wheel = 1.0;
 
 
 // function log(text) {
@@ -484,7 +491,7 @@ function connect() {
     console.log("Connection established");
     // document.getElementById("text").disabled = false;
     // document.getElementById("send").disabled = false;
-  };
+  }
 
   connection.onerror = function(evt) {
     console.dir(evt);
@@ -514,18 +521,22 @@ function connect() {
         break;
 
       case "joyL-message":
-            console.log("--------------------------------");
+            /*console.log("--------------------------------");
             console.log("JOYSTICK LEFT Message in a bottle!");
             console.log(msg.value);
-            console.log("--------------------------------");
-      break;
+            console.log("--------------------------------");*/
+            vel_lin = -msg.value.y;
+            compute_vel();
+            break;
 
       case "joyR-message":
-        console.log("--------------------------------");
-        console.log("JOYSTICK RIGHT Message in a bottle!");
-        console.log(msg.value);
-        console.log("--------------------------------");
-      break;
+            /*console.log("--------------------------------");
+            console.log("JOYSTICK RIGHT Message in a bottle!");
+            console.log(msg.value);
+            console.log("--------------------------------");*/
+            vel_ang = -msg.value.x;
+            compute_vel();
+            break;
 
       case "text-message":
           console.log("--------------------------------");
@@ -581,7 +592,7 @@ function connect() {
       chatBox.innerHTML += text;
       chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
     }
-  };
+  }
 }
 
 // Handles reporting errors. Currently, we just dump stuff to console but
@@ -817,4 +828,14 @@ function handleGetUserMediaError(e) {
   // ready to try again.
 
   closeVideoCall();
+}
+
+function compute_vel() {
+ 
+  vel_Right = ((2 * vel_lin) + (vel_ang * W_wheel)) / (2 * R_wheel);
+  vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
+  console.log(Math.round(vel_Left));
+  console.log(Math.round(vel_Right));
+  window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
+
 }
