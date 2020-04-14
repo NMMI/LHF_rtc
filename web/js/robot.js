@@ -43,7 +43,9 @@ const R_wheel = 1.0;
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-const SERVER_IP_ = "10.244.207.185";
+// const SERVER_IP_ = "10.244.75.85";
+const SERVER_IP_ = "10.244.107.78";
+
 function startupCode()
 {
   console.log("Start me up");
