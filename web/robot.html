@@ -27,9 +27,34 @@
     <link rel="stylesheet" href="css/main_generic.css"/>
     <link rel="stylesheet" href="css/main.css"/>
 
+    <!-- ********************************************BLE browser STUFF*****************************************************-->
+    <meta charset="utf-8">
+    <title>root robot BLE browser</title>
+    <link rel="stylesheet" type="text/css" href="css/root-ble/styles.css">
+    <!-- *******************************************************************************************************************-->
+
+
 </head>
 
 <body>
+
+<!-- ********************************************BLE browser STUFF*****************************************************-->
+<script src="//cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+
+<h1>Root Robot Bluetooth Low Energy Protocol Implementation in Javascript</h1>
+
+<button class="btn" id="btnScanAndConnect">Scan and connect</button>
+<button class="btn" id="btnDisconnect" disabled>Disconnect</button>
+
+<button class="btn" id="moveBtn" disabled>Muovi robot</button>
+
+<div id="log">Motion logs</div>
+
+<script type="text/javascript" src="js/root-ble/root.min.js"></script>
+<script type="text/javascript" src="js/root-ble/main.js"></script>
+<!-- *******************************************************************************************************************-->
+
 
 <div id="container">
 

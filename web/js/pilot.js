@@ -38,7 +38,7 @@ var transceiver = null;         // RTCRtpTransceiver
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-const SERVER_IP_ = "127.0.0.1";
+const SERVER_IP_ = "10.244.207.185";
 function startupCode()
 {
   console.log("Start me up");
@@ -816,18 +816,51 @@ function sendMessageButton()
   sendToServer(message);
 }
 
+var offset_x_L;
+var offset_y_L;
+var offset_x_R;
+var offset_y_R;
+var relative_data_L = { 
+    position: 
+      {
+        x : 0.0,
+        y : 0.0
 
+      }
+  };
+
+  var relative_data_R = { 
+    position: 
+      {
+        x : 0.0,
+        y : 0.0
+
+      }
+  };
 //Retrieve Joysticks values
 joystickL.on('start end', function(evt, dataL) { 
-                        sendMessageJoyL(dataL);
+                        offset_x_L = dataL.position.x;
+                        offset_y_L = dataL.position.y;
+                        relative_data_L.position.x = dataL.position.x - offset_x_L;
+                        relative_data_L.position.y = dataL.position.y - offset_y_L;
+                        //console.log(offset_x_L);
+                        sendMessageJoyL(relative_data_L);
                         }).on('move', function(evt, dataL) {
-                                          sendMessageJoyL(dataL);
+                                          relative_data_L.position.x = dataL.position.x - offset_x_L;
+                                          relative_data_L.position.y = dataL.position.y - offset_y_L;
+                                          sendMessageJoyL(relative_data_L);
                                         });
 
 joystickR.on('start end', function(evt, dataR) { 
-                        sendMessageJoyR(dataR);
+                        offset_x_R = dataR.position.x;
+                        offset_y_R = dataR.position.y;
+                        relative_data_R.position.x = dataR.position.x - offset_x_R;
+                        relative_data_R.position.y = dataR.position.y - offset_y_R;
+                        sendMessageJoyR(relative_data_R);
                         }).on('move', function(evt, dataR) {
-                                          sendMessageJoyR(dataR);
+                                          relative_data_R.position.x = dataR.position.x - offset_x_R;
+                                          relative_data_R.position.y = dataR.position.y - offset_y_R;
+                                          sendMessageJoyR(relative_data_R);
                                         });
 
 // Send Joystick value message

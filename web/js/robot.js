@@ -36,7 +36,7 @@ var transceiver = null;         // RTCRtpTransceiver
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-const SERVER_IP_ = "127.0.0.1";
+const SERVER_IP_ = "10.244.207.185";
 function startupCode()
 {
   console.log("Start me up");

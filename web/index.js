@@ -28,7 +28,7 @@ const options = {
 }
 
 // roomba bluetooth setup page
-var app_roomba = express();
+/*var app_roomba = express();
 
 app_roomba.use(express.static(__dirname));
 
@@ -50,7 +50,7 @@ const port_roomba = 5555;
 var server_roomba = https.createServer(options,app_roomba);
 console.log("Pilot page listening on port: ", port_roomba);
 
-server_roomba.listen(port_roomba);
+server_roomba.listen(port_roomba);*/
 
 // pilot setup page
 var app_pilot = express();
