@@ -38,8 +38,8 @@ var transceiver = null;         // RTCRtpTransceiver
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-// const SERVER_IP_ = "10.244.75.85";
-const SERVER_IP_ = "10.244.107.78";
+const SERVER_IP_ = "10.244.75.85";
+// const SERVER_IP_ = "10.244.107.78";
 
 function startupCode()
 {
@@ -71,22 +71,22 @@ function startupCode()
 const video1 = document.querySelector('video#video1');
 const video2 = document.querySelector('video#video2');
 
-const statusDiv = document.querySelector('div#status');
+// const statusDiv = document.querySelector('div#status');
 
-const audioCheckbox = document.querySelector('input#audio');
+// const audioCheckbox = document.querySelector('input#audio');
 
 const messageButton = document.querySelector('button#messageBtn');
 const messageText = document.querySelector('input#messageText');
 // const startButton = document.querySelector('button#start');
-const callButton = document.querySelector('button#call');
+// const callButton = document.querySelector('button#call');
 // const insertRelayButton = document.querySelector('button#insertRelay');
-const hangupButton = document.querySelector('button#hangup');
+// const hangupButton = document.querySelector('button#hangup');
 
 messageButton.onclick = sendMessageButton;
 // startButton.onclick = start;
-callButton.onclick = call;
+// callButton.onclick = call;
 // insertRelayButton.onclick = insertRelay;
-hangupButton.onclick = hangup;
+// hangupButton.onclick = hangup;
 
 const pipes = [];
 

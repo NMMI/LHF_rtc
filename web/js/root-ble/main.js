@@ -1,7 +1,7 @@
 
-const moveButton = document.getElementById('moveBtn');
+// const moveButton = document.getElementById('moveBtn');
 
-moveButton.onclick = move;
+// moveButton.onclick = move;
 
 function move() {
   console.log("Move button clicked");
@@ -50,7 +50,7 @@ function rootIsSetup (root) {
   console.log('start using root', root);
   window.root = root;
 
-  moveButton.disabled = false;
+  // moveButton.disabled = false;
   // draw square example
   document.getElementById('log').innerHTML += '<br>Connected!';
 
