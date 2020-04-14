@@ -43,6 +43,8 @@ function startupCode()
 {
   console.log("Start me up");
 
+  document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
+
   // Get our hostname
   // myHostname =  window.location.hostname;
   myHostname = SERVER_IP_;
@@ -871,7 +873,8 @@ function sendMessageJoyL(value_joyL)
     name: myUsername,
     target: targetUsername,
     type: "joyL-message",
-    value: value_joyL.position
+    value: "sinistra"
+    // value: value_joyL.position
   };
   sendToServer(message_joy_L);
 }
@@ -884,7 +887,8 @@ function sendMessageJoyR(value_joyR)
     name: myUsername,
     target: targetUsername,
     type: "joyR-message",
-    value: value_joyR.position
+    value: "destra"
+    // value: value_joyR.position
   };
   sendToServer(message_joy_R);
 }

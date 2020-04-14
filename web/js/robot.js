@@ -48,6 +48,8 @@ function startupCode()
 {
   console.log("Start me up");
 
+  document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
+
   // Get our hostname
   // myHostname =  window.location.hostname;
   myHostname = SERVER_IP_;
@@ -500,6 +502,21 @@ function connect() {
   connection.onmessage = function(evt) {
     var chatBox = document.querySelector(".chatbox");
     var text = "";
+    console.log('Guarda qua');
+    console.log(evt.data);
+    console.log(evt);
+
+    /*var msg = "";
+    if (typeof evt.data === 'object') {
+      // do nothing...
+      console.log("Joystick message");
+      msg = evt.data;
+    } else {
+      console.log("Normal message");
+      console.log("typeof evt.data");
+      console.log(typeof evt.data);
+      msg = JSON.parse(evt.data);
+    }*/
     var msg = JSON.parse(evt.data);
     console.log("Message received: ");
     console.dir(msg);
@@ -521,19 +538,19 @@ function connect() {
         break;
 
       case "joyL-message":
-            /*console.log("--------------------------------");
+            console.log("--------------------------------");
             console.log("JOYSTICK LEFT Message in a bottle!");
             console.log(msg.value);
-            console.log("--------------------------------");*/
+            console.log("--------------------------------");
             vel_lin = -msg.value.y;
             compute_vel();
             break;
 
       case "joyR-message":
-            /*console.log("--------------------------------");
+            console.log("--------------------------------");
             console.log("JOYSTICK RIGHT Message in a bottle!");
             console.log(msg.value);
-            console.log("--------------------------------");*/
+            console.log("--------------------------------");
             vel_ang = -msg.value.x;
             compute_vel();
             break;
@@ -581,8 +598,8 @@ function connect() {
       // Unknown message; output to console for debugging.
 
       default:
-        log_error("Unknown message received:");
-        log_error(msg);
+        console.log("Unknown message received:");
+        console.log(msg);
     }
 
     // If there's text to insert into the chat buffer, do so now, then
@@ -834,8 +851,15 @@ function compute_vel() {
  
   vel_Right = ((2 * vel_lin) + (vel_ang * W_wheel)) / (2 * R_wheel);
   vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
-  console.log(Math.round(vel_Left));
-  console.log(Math.round(vel_Right));
-  window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
-
+  /*console.log(Math.round(vel_Left));
+  console.log(Math.round(vel_Right));*/
+  if(window.root != null)
+  {
+    window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
+  }
+  else
+  {
+    console.log('Robot vehicle not connected');
+  }
+  
 }
