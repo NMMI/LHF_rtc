@@ -27,7 +27,8 @@ var mediaConstraints = {
 var webcamStream = null;        // MediaStream from webcam
 var transceiver = null;         // RTCRtpTransceiver
 
-
+var num_sent_lin = 0;
+var num_sent_ang = 0;
 
 // function log(text) {
 //   var time = new Date();
@@ -74,6 +75,9 @@ const video2 = document.querySelector('video#video2');
 // const statusDiv = document.querySelector('div#status');
 
 // const audioCheckbox = document.querySelector('input#audio');
+
+const div_num_recv_lin = document.getElementById('div_num_recv_lin');
+const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
 const messageButton = document.querySelector('button#messageBtn');
 const messageText = document.querySelector('input#messageText');
@@ -842,26 +846,34 @@ var relative_data_L = {
       }
   };
 //Retrieve Joysticks values
-joystickL.on('start end', function(evt, dataL) { 
+joystickL.on('start', function(evt, dataL) { 
                         offset_x_L = dataL.position.x;
                         offset_y_L = dataL.position.y;
                         relative_data_L.position.x = dataL.position.x - offset_x_L;
                         relative_data_L.position.y = dataL.position.y - offset_y_L;
                         //console.log(offset_x_L);
-                        sendMessageJoyL(relative_data_L);
+                        // sendMessageJoyL(relative_data_L);
                         }).on('move', function(evt, dataL) {
+                                          relative_data_L.position.x = dataL.position.x - offset_x_L;
+                                          relative_data_L.position.y = dataL.position.y - offset_y_L;
+                                          sendMessageJoyL(relative_data_L);
+                                        }).on('end', function(evt, dataL) {
                                           relative_data_L.position.x = dataL.position.x - offset_x_L;
                                           relative_data_L.position.y = dataL.position.y - offset_y_L;
                                           sendMessageJoyL(relative_data_L);
                                         });
 
-joystickR.on('start end', function(evt, dataR) { 
+joystickR.on('start', function(evt, dataR) { 
                         offset_x_R = dataR.position.x;
                         offset_y_R = dataR.position.y;
                         relative_data_R.position.x = dataR.position.x - offset_x_R;
                         relative_data_R.position.y = dataR.position.y - offset_y_R;
-                        sendMessageJoyR(relative_data_R);
+                        // sendMessageJoyR(relative_data_R);
                         }).on('move', function(evt, dataR) {
+                                          relative_data_R.position.x = dataR.position.x - offset_x_R;
+                                          relative_data_R.position.y = dataR.position.y - offset_y_R;
+                                          sendMessageJoyR(relative_data_R);
+                                        }).on('end', function(evt, dataR) {
                                           relative_data_R.position.x = dataR.position.x - offset_x_R;
                                           relative_data_R.position.y = dataR.position.y - offset_y_R;
                                           sendMessageJoyR(relative_data_R);
@@ -871,11 +883,13 @@ joystickR.on('start end', function(evt, dataR) {
 function sendMessageJoyL(value_joyL)
 {
   console.log(value_joyL.position);
+  num_sent_lin += 1;
+  div_num_recv_lin.innerHTML = `# lin = ${num_sent_lin}`;
   var message_joy_L = { 
     name: myUsername,
     target: targetUsername,
     type: "joyL-message",
-    value: value_joyL.position
+    value: parseInt(value_joyL.position.y,10)
     // value: "sinistra"
     // value: value_joyL.position
   };
@@ -886,11 +900,13 @@ function sendMessageJoyL(value_joyL)
 function sendMessageJoyR(value_joyR)
 {
   console.log(value_joyR.position);
+  num_sent_ang += 1;
+  div_num_recv_ang.innerHTML = `# ang = ${num_sent_ang}`;
   var message_joy_R = { 
     name: myUsername,
     target: targetUsername,
     type: "joyR-message",
-    value: value_joyR.position
+    value: parseInt(value_joyR.position.x,10)
     // value: "destra"
     // value: value_joyR.position
   };

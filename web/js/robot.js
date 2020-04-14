@@ -33,6 +33,8 @@ var vel_ang = 0.0;
 const W_wheel = 0.30;
 const R_wheel = 1.0;
 
+var num_recv_lin = 0;
+var num_recv_ang = 0;
 
 // function log(text) {
 //   var time = new Date();
@@ -79,11 +81,25 @@ const video2 = document.querySelector('video#video2');
 // const statusDiv = document.querySelector('div#status');
 
 // const audioCheckbox = document.querySelector('input#audio');
-
+const div_num_recv_lin = document.getElementById('div_num_recv_lin');
+const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 // const startButton = document.querySelector('button#start');
 // const callButton = document.querySelector('button#call');
 // const insertRelayButton = document.querySelector('button#insertRelay');
 // const hangupButton = document.querySelector('button#hangup');
+
+const rotateBtn = document.getElementById('rotateBtn');
+const rotateAnversaBtn = document.getElementById('rotateAnversaBtn');
+const forwardBtn = document.getElementById('forwardBtn');
+const backwardBtn = document.getElementById('backwardBtn');
+const stopBtn = document.getElementById('stopBtn');
+
+rotateBtn.onclick = rotateRobot;
+rotateAnversaBtn.onclick = rotateAnversaRobot;
+forwardBtn.onclick = forwardRobot;
+backwardBtn.onclick = backwardRobot;
+stopBtn.onclick = stopRobot;
+
 
 // startButton.onclick = start;
 // callButton.onclick = call;
@@ -544,7 +560,9 @@ function connect() {
             console.log("JOYSTICK LEFT Message in a bottle!");
             console.log(msg.value);
             console.log("--------------------------------");
-            vel_lin = -msg.value.y;
+            vel_lin = -msg.value;
+            num_recv_lin += 1;
+            div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
             compute_vel();
             break;
 
@@ -553,7 +571,9 @@ function connect() {
             console.log("JOYSTICK RIGHT Message in a bottle!");
             console.log(msg.value);
             console.log("--------------------------------");
-            vel_ang = -msg.value.x;
+            vel_ang = -msg.value;
+            num_recv_ang += 1;
+            div_num_recv_ang.innerHTML = `# ang = ${num_recv_ang}`;
             compute_vel();
             break;
 
@@ -855,13 +875,42 @@ function compute_vel() {
   vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
   /*console.log(Math.round(vel_Left));
   console.log(Math.round(vel_Right));*/
+  if(vel_Left < -100) { vel_Left = -100; }
+  if(vel_Left > 100) {vel_Left = 100;}
+  if(vel_Right < -100) { vel_Right = -100; }
+  if(vel_Right > 100) {vel_Right = 100;}
+  console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
   if(window.root != null)
   {
-    window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
+      window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
   }
   else
   {
     console.log('Robot vehicle not connected');
   }
   
+}
+
+function rotateAnversaRobot() {
+  window.root.device.motors.setLeftAndRightMotorSpeed(+20, -20);
+}
+
+function rotateRobot() {
+  window.root.device.motors.setLeftAndRightMotorSpeed(-20, +20);
+}
+
+function forwardRobot() {
+  console.log('Mando il robot avanti');
+  // window.root.device.motors.setLeftAndRightMotorSpeed(+30, +30);
+  // window.root.device.motors.setRightMotorSpeed(+30);
+  // window.root.device.motors.setLeftMotorSpeed(+30);
+  window.root.device.motors.setLeftAndRightMotorSpeed(20, 20);
+}
+
+function backwardRobot() {
+  window.root.device.motors.setLeftAndRightMotorSpeed(-20, -20);
+}
+
+function stopRobot() {
+  window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(0), Math.round(0));
 }
