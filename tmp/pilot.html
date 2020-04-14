@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <!-- <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png"> -->
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <base target="_blank">
+
+    <title>Camera Pilota</title>
+
+    <!-- <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png"> -->
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/main_generic.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
+</head>
+
+<body>
+
+<div id="container">
+
+    <h1>Camera Pilota
+    </h1>
+
+    <div id="videos">
+        <video id="video1" playsinline autoplay muted></video>
+        <video id="video2" playsinline autoplay></video>
+    </div>
+
+    <section><input type="checkbox" id="audio"><label for="audio">Include audio (supported in Chrome 49 and above)</label></section>
+
+    <div id="buttons">
+        <button id="start">Start</button>
+        <button id="call" disabled>Call</button>
+        <button id="insertRelay" disabled>Insert relay</button>
+        <button id="hangup" disabled>Hang Up</button>
+    </div>
+
+    <div id="status"></div>
+
+    <div id="messages">
+        <ul id="messages"></ul>
+        <form action="">
+        <input id="messageText" autocomplete="off" />
+        </form>
+        <button id="messageBtn">Invia messaggio</button>
+    </div>
+</div>
+
+<!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
+<!-- <script src="js/videopipe.js"></script> -->
+
+
+<div id="left"></div>
+<div id="right"></div>
+<script src="node_modules/nipplejs/dist/nipplejs.js"></script>
+
+<script>
+    var joystickL = nipplejs.create({
+        zone: document.getElementById('left'),
+        mode: 'static',
+        position: { left: '20%', top: '50%' },
+        color: 'green',
+        size: 200
+    });
+
+    var joystickR = nipplejs.create({
+        zone: document.getElementById('right'),
+        mode: 'static',
+        position: { left: '80%', top: '50%' },
+        color: 'red',
+        size: 200
+    });
+
+
+</script>
+<script src="js/pilot.js" async></script>
+
+<!--script src="test_joystick.js" async></script-->
+
+
+<!-- Google Analytics stuff... do we need it? -->
+<!-- <script src="../../../js/lib/ga.js"></script> -->
+
+</body>
+</html>
