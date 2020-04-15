@@ -857,7 +857,7 @@ joystickL.on('start', function(evt, dataL) {
                                           relative_data_L.position.x = dataL.position.x - offset_x_L;
                                           relative_data_L.position.y = dataL.position.y - offset_y_L;
                                           relative_data_L.position.x = 0;
-                                          relative_data_L.position.y = 20*Math.sign(dataL.position.y - offset_y_L);
+                                          relative_data_L.position.y = 100*Math.sign(dataL.position.y - offset_y_L);
                                           sendMessageJoyL(relative_data_L);
                                         }).on('end', function(evt, dataL) {
                                           relative_data_L.position.x = 0;// dataL.position.x - offset_x_L;
@@ -874,7 +874,7 @@ joystickR.on('start', function(evt, dataR) {
                         }).on('move', function(evt, dataR) {
                                           relative_data_R.position.x = dataR.position.x - offset_x_R;
                                           relative_data_R.position.y = dataR.position.y - offset_y_R;
-                                          relative_data_R.position.x = 20*Math.sign(dataR.position.x - offset_x_R);
+                                          relative_data_R.position.x = 100*Math.sign(dataR.position.x - offset_x_R);
                                           relative_data_R.position.y = 0;
                                           sendMessageJoyR(relative_data_R);
                                         }).on('end', function(evt, dataR) {
