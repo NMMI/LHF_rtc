@@ -45,8 +45,8 @@ var num_recv_ang = 0;
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-//const SERVER_IP_ = "10.244.75.85";
-const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.75.85";
+// const SERVER_IP_ = "10.244.207.185";
 
 // const SERVER_IP_ = "10.244.107.78";
 // const SERVER_IP_ = "127.0.0.1";
@@ -79,8 +79,8 @@ function startupCode()
 }
 
 
-const video1 = document.querySelector('video#video2'); // TODO fix
-const video2 = document.querySelector('video#video1');
+const video1 = document.querySelector('video#video2_robot'); // TODO fix
+const video2 = document.querySelector('video#video1_robot');
 
 // const statusDiv = document.querySelector('div#status');
 
@@ -928,5 +928,5 @@ function stopRobot() {
 
 function dock_robot()
 {
-  window.root.device.motors.dock_robot();
+  window.root.device.motors.dockRobot();
 }
