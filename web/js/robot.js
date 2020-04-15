@@ -886,10 +886,10 @@ function compute_vel() {
   vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
   /*console.log(Math.round(vel_Left));
   console.log(Math.round(vel_Right));*/
-  if(vel_Left < -100) { vel_Left = -100; }
-  if(vel_Left > 100) {vel_Left = 100;}
-  if(vel_Right < -100) { vel_Right = -100; }
-  if(vel_Right > 100) {vel_Right = 100;}
+  // if(vel_Left < -100) { vel_Left = -100; }
+  // if(vel_Left > 100) {vel_Left = 100;}
+  // if(vel_Right < -100) { vel_Right = -100; }
+  // if(vel_Right > 100) {vel_Right = 100;}
   console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
   if(window.root != null)
   {
