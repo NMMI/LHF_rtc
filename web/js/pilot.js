@@ -83,12 +83,17 @@ const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
 const messageButton = document.querySelector('button#messageBtn');
 const messageText = document.querySelector('input#messageText');
+
+const dockingButton = document.getElementById('dockingButton');
+
 // const startButton = document.querySelector('button#start');
 // const callButton = document.querySelector('button#call');
 // const insertRelayButton = document.querySelector('button#insertRelay');
 // const hangupButton = document.querySelector('button#hangup');
 
 messageButton.onclick = sendMessageButton;
+dockingButton.onclick = sendDockingMessage;
+
 // startButton.onclick = start;
 // callButton.onclick = call;
 // insertRelayButton.onclick = insertRelay;
@@ -933,4 +938,15 @@ function sendMessageJoyR(value_joyR)
     // value: value_joyR.position
   };
   sendToServer(message_joy_R);
+}
+
+// Docking message
+function sendDockingMessage()
+{
+  var message_dock_robot = { 
+    name: myUsername,
+    target: targetUsername,
+    type: "docking-message"
+  };
+  sendToServer(message_dock_robot);
 }

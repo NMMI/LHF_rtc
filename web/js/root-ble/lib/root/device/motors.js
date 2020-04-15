@@ -91,6 +91,19 @@ Object.assign(RootDeviceMotors.prototype, {
       motor: motor,
       cause: cause
     });
+  },
+
+  dockRobot: function (callback) {
+    var command = 14;
+    var dataView = new DataView((new Uint8Array(4)).buffer);
+    dataView.setInt32(0, 0, false);
+    var payload = new Uint8Array(dataView.buffer);
+    this.root.toRobot(this.device, command, payload, this.dockRobotFinishedCallback(callback), null);
+  },
+  dockRobotFinishedCallback: function (callback)
+  {
+    console.log('Finished docking!');
+    return callback;
   }
 
 });
