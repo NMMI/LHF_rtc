@@ -557,6 +557,13 @@ function connect() {
         text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
         break;
 
+      case "docking-message":
+        console.log("--------------------------");
+        console.log(" Received docking message ");
+        console.log("--------------------------");
+        dock_robot();
+        break;
+      
       case "joyL-message":
             console.log("--------------------------------");
             console.log("JOYSTICK LEFT Message in a bottle!");
@@ -915,4 +922,9 @@ function backwardRobot() {
 
 function stopRobot() {
   window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(0), Math.round(0));
+}
+
+function dock_robot()
+{
+  window.root.device.motors.dock_robot();
 }
