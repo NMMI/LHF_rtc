@@ -40,9 +40,9 @@ var num_sent_ang = 0;
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-//const SERVER_IP_ = "10.244.75.85";
+const SERVER_IP_ = "10.244.75.85";
 // const SERVER_IP_ = "10.244.107.78";
-const SERVER_IP_ = "127.0.0.1";
+// const SERVER_IP_ = "127.0.0.1";
 
 function startupCode()
 {
@@ -848,6 +848,8 @@ var relative_data_L = {
       }
   };
 //Retrieve Joysticks values
+var joyL_flag = false;
+var joyL_sign_old = 0;
 joystickL.on('start', function(evt, dataL) { 
                         offset_x_L = dataL.position.x;
                         offset_y_L = dataL.position.y;
@@ -855,12 +857,18 @@ joystickL.on('start', function(evt, dataL) {
                         relative_data_L.position.y = dataL.position.y - offset_y_L;
                         //console.log(offset_x_L);
                         // sendMessageJoyL(relative_data_L);
+                        joyL_flag = true;
                         }).on('move', function(evt, dataL) {
                                           relative_data_L.position.x = dataL.position.x - offset_x_L;
                                           relative_data_L.position.y = dataL.position.y - offset_y_L;
+                                          var joyL_sign = Math.sign(dataL.position.y - offset_y_L);
                                           relative_data_L.position.x = 0;
-                                          relative_data_L.position.y = 100*Math.sign(dataL.position.y - offset_y_L);
-                                          sendMessageJoyL(relative_data_L);
+                                          relative_data_L.position.y = 100*joyL_sign;
+                                          if(joyL_flag || joyL_sign != joyL_sign_old) {
+                                            sendMessageJoyL(relative_data_L);
+                                            joyL_sign_old = joyL_sign;
+                                            joyL_flag = false;
+                                          }
                                         }).on('end', function(evt, dataL) {
                                           relative_data_L.position.x = 0;// dataL.position.x - offset_x_L;
                                           relative_data_L.position.y = 0;// dataL.position.y - offset_y_L;

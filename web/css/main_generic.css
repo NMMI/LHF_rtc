@@ -118,7 +118,7 @@
   html {
     /* avoid annoying page width change
     when moving from the home page */
-    overflow: hidden;
+    overflow: visible;
   }
   
   img {
