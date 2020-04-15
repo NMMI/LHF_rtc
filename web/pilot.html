@@ -54,7 +54,7 @@
 
     <div id="div_num_recv_lin"># lin = 0</div>
     <div id="div_num_recv_ang"># ang = 0</div>
-    
+
     <div id="messages">
         <ul id="messages"></ul>
         <form action="">
@@ -79,7 +79,8 @@
         mode: 'static',
         position: { left: '20%', top: '50%' },
         color: 'green',
-        size: 200
+        size: 200,
+        lockY: true
     });
 
     var joystickR = nipplejs.create({
@@ -87,7 +88,8 @@
         mode: 'static',
         position: { left: '80%', top: '50%' },
         color: 'red',
-        size: 200
+        size: 200,
+        lockX: true
     });
 
 
