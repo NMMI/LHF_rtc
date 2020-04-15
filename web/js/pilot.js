@@ -865,18 +865,26 @@ joystickL.on('start', function(evt, dataL) {
                                           sendMessageJoyL(relative_data_L);
                                         });
 
+var joyR_flag = false;
+var joyR_sign_old = 0;
 joystickR.on('start', function(evt, dataR) { 
                         offset_x_R = dataR.position.x;
                         offset_y_R = dataR.position.y;
                         relative_data_R.position.x = dataR.position.x - offset_x_R;
                         relative_data_R.position.y = dataR.position.y - offset_y_R;
                         // sendMessageJoyR(relative_data_R);
+                        joyR_flag = true;
                         }).on('move', function(evt, dataR) {
                                           relative_data_R.position.x = dataR.position.x - offset_x_R;
                                           relative_data_R.position.y = dataR.position.y - offset_y_R;
-                                          relative_data_R.position.x = 100*Math.sign(dataR.position.x - offset_x_R);
+                                          var joyR_sign = Math.sign(dataR.position.x - offset_x_R);
+                                          relative_data_R.position.x = 100*joyR_sign;
                                           relative_data_R.position.y = 0;
-                                          sendMessageJoyR(relative_data_R);
+                                          if(joyR_flag || joyR_sign != joyR_sign_old) {
+                                            sendMessageJoyR(relative_data_R);
+                                            joyR_sign_old = joyR_sign;
+                                            joyR_flag = false;
+                                          }
                                         }).on('end', function(evt, dataR) {
                                           relative_data_R.position.x = 0; //dataR.position.x - offset_x_R;
                                           relative_data_R.position.y = 0; //dataR.position.y - offset_y_R;
