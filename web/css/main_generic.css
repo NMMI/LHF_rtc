@@ -5,7 +5,7 @@
  *  that can be found in the LICENSE file in the root of the source
  *  tree.
  */
- .hidden {
+ /*.hidden {
     display: none;
   }
   
@@ -22,7 +22,7 @@
   }
   
   @media screen and (min-width: 1000px) {
-    /* hack! to detect non-touch devices */
+
     div#links a {
       line-height: 0.8em;
     }
@@ -30,15 +30,23 @@
   
   audio {
     max-width: 100%;
-  }
+  }*/
   
+  html {
+  /* avoid annoying page width change
+  when moving from the home page */
+  overflow: visible;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  }
+
   body {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     margin: 0;
-    padding: 1em;
-    word-break: break-word;
-    height: 95vh;
+    padding: 0;
+    height: 100vh;
   }
   
   button {
@@ -52,7 +60,8 @@
     padding: 0.5em 0.7em 0.6em 0.7em;
   }
   
-  button:active {
+
+  /*button:active {
     background-color: #cf402f;
   }
   
@@ -66,29 +75,29 @@
   
   button[disabled]:hover {
     background-color: #d84a38;
-  }
+  }*/
   
-  canvas {
+  /*canvas {
     background-color: #ccc;
     max-width: 100%;
     width: 100%;
-  }
+  }*/
   
   code {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
   }
   
-  div#container {
+ /* div#container {
     margin: 0 auto 0 auto;
     height: 100%;
-    /*max-width: 60em;*/
+
     padding: 1em 1.5em 1.3em 1.5em;
-  }
+  }*/
   
-  div#links {
+  /*div#links {
     padding: 0.5em 0 0 0;
-  }
+  }*/
   
   h1 {
     border-bottom: 1px solid #ccc;
@@ -115,13 +124,9 @@
     margin: 0 0 0.4em 0;
   }
   
-  html {
-    /* avoid annoying page width change
-    when moving from the home page */
-    overflow: visible;
-  }
+
   
-  img {
+  /*img {
     border: none;
     max-width: 100%;
   }
@@ -226,7 +231,7 @@
     font-family: 'Roboto', sans-serif;
   }
   
-  /*video {
+  video {
     background: #222;
     margin: 0 0 20px 0;
     --width: 100%;
@@ -234,7 +239,7 @@
     height: calc(var(--width) * 0.75);
   }*/
   
-  ul {
+  /*ul {
     margin: 0 0 0.5em 0;
   }
   
@@ -264,7 +269,7 @@
     h1 {
       font-size: 20px;
     }
-  }
+  }*/
   
   
   
