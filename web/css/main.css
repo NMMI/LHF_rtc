@@ -26,12 +26,23 @@
     top: -1px;
   }
   
-  video#video2 {
+  video#video2_pilot {
     height: 100%;
     width: 50%;
   }
   
-  video#video1 {
+  video#video1_pilot {
+    position:absolute;
+    height: 10%;
+    width: 100%;
+  }
+
+  video#video2_robot {
+    height: 100%;
+    width: 50%;
+  }
+  
+  video#video1_robot {
     position:absolute;
     height: 10%;
     width: 100%;
