@@ -17,11 +17,12 @@ var myHostname = "";
 
 var mediaConstraints = {
   audio: false,            // We want an audio track
-  video: {
+  video: true
+  /*video: {
     aspectRatio: {
       ideal: 1.333333     // 3:2 aspect is preferred
     }
-  }
+  }*/
 };
 
 var webcamStream = null;        // MediaStream from webcam
@@ -39,8 +40,9 @@ var num_sent_ang = 0;
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-const SERVER_IP_ = "10.244.75.85";
+//const SERVER_IP_ = "10.244.75.85";
 // const SERVER_IP_ = "10.244.107.78";
+const SERVER_IP_ = "127.0.0.1";
 
 function startupCode()
 {

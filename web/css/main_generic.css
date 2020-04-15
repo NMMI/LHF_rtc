@@ -38,6 +38,7 @@
     margin: 0;
     padding: 1em;
     word-break: break-word;
+    height: 95vh;
   }
   
   button {
@@ -80,7 +81,8 @@
   
   div#container {
     margin: 0 auto 0 auto;
-    max-width: 60em;
+    height: 100%;
+    /*max-width: 60em;*/
     padding: 1em 1.5em 1.3em 1.5em;
   }
   
@@ -116,7 +118,7 @@
   html {
     /* avoid annoying page width change
     when moving from the home page */
-    overflow-y: scroll;
+    overflow: hidden;
   }
   
   img {
@@ -224,13 +226,13 @@
     font-family: 'Roboto', sans-serif;
   }
   
-  video {
+  /*video {
     background: #222;
     margin: 0 0 20px 0;
     --width: 100%;
     width: var(--width);
     height: calc(var(--width) * 0.75);
-  }
+  }*/
   
   ul {
     margin: 0 0 0.5em 0;
