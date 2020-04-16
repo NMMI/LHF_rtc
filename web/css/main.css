@@ -10,6 +10,10 @@
     margin: 20px 10px 0 0;
     width: 100px;
   }
+
+  button#but_sidebar{
+    width: 300px;
+  }
   
   div#buttons {
     margin: 0 0 20px 0;
