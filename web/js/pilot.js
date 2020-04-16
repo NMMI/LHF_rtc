@@ -845,24 +845,14 @@ var relative_data = {
 
 //Retrieve Joysticks values
 const max_speed = 200;
-var joy_flag = false;
-var joy_sign_old = 0;
 var angle = 0.0;
 var direction = ""
 var direction_old = ""
 var vel_lin = 0;
 var vel_ang = 0;
 joystick.on('start', function(evt, data) { 
-                        /*offset_x = data.position.x;
-                        offset_y = data.position.y;
-                        relative_data.position.x = data.position.x - offset_x;
-                        relative_data.position.y = data.position.y - offset_y;
-                        joy_flag = true;*/
+                        /*nothing*/
                         }).on('move', function(evt, data) {
-                                          /*relative_data.position.x = data.position.x - offset_x;
-                                          relative_data.position.y = data.position.y - offset_y;
-                                          //console.log(data.angle.degree);
-                                          console.log(data.distance);*/
                                           angle = data.angle.degree;
                                           if((angle>=0 && angle<22.5) || (angle>=337.5 && angle<=360))
                                           {
@@ -931,13 +921,10 @@ joystick.on('start', function(evt, data) {
                                             joyL_sign_old = joyL_sign;
                                             joyL_flag = false;
                                           }*/
-                                        }).on('end', function(evt, dataL) {
+                                        }).on('end', function(evt, data) {
                                           vel_lin = 0;
                                           vel_ang = 0;
                                           sendMessageJoy(vel_lin, vel_ang);
-                                          relative_data.position.x = 0;// dataL.position.x - offset_x_L;
-                                          relative_data.position.y = 0;// dataL.position.y - offset_y_L;
-                                          /*sendMessageJoyL(relative_data_L);*/
                                         });
 
 // Send Joystick value message
