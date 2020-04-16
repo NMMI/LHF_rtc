@@ -831,11 +831,10 @@ function sendMessageButton()
   sendToServer(message);
 }
 
-var offset_x_L;
-var offset_y_L;
-var offset_x_R;
-var offset_y_R;
-var relative_data_L = { 
+var offset_x;
+var offset_y;
+
+var relative_data = { 
     position: 
       {
         x : 0.0,
@@ -844,67 +843,35 @@ var relative_data_L = {
       }
   };
 
-  var relative_data_R = { 
-    position: 
-      {
-        x : 0.0,
-        y : 0.0
-
-      }
-  };
 //Retrieve Joysticks values
 const max_speed = 200;
-var joyL_flag = false;
-var joyL_sign_old = 0;
-joystickL.on('start', function(evt, dataL) { 
-                        offset_x_L = dataL.position.x;
-                        offset_y_L = dataL.position.y;
-                        relative_data_L.position.x = dataL.position.x - offset_x_L;
-                        relative_data_L.position.y = dataL.position.y - offset_y_L;
-                        //console.log(offset_x_L);
-                        // sendMessageJoyL(relative_data_L);
-                        joyL_flag = true;
+var joy_flag = false;
+var joy_sign_old = 0;
+joystick.on('start', function(evt, data) { 
+                        offset_x_ = data.position.x;
+                        offset_y_ = data.position.y;
+                        relative_data.position.x = data.position.x - offset_x;
+                        relative_data.position.y = data.position.y - offset_y;
+                        joy_flag = true;
                         }).on('move', function(evt, dataL) {
-                                          relative_data_L.position.x = dataL.position.x - offset_x_L;
-                                          relative_data_L.position.y = dataL.position.y - offset_y_L;
-                                          var joyL_sign = Math.sign(dataL.position.y - offset_y_L);
-                                          relative_data_L.position.x = 0;
-                                          relative_data_L.position.y = max_speed*joyL_sign;
-                                          if(joyL_flag || joyL_sign != joyL_sign_old) {
+                                          relative_data_.position.x = data.position.x - offset_x;
+                                          relative_data.position.y = data.position.y - offset_y;
+                                          var joy_sign_y = Math.sign(data.position.y - offset_y);
+                                          var joy_sign_x = Math.sign(data.position.x - offset_x);
+                                          relative_data_.position.x = max_speed*joy_sign_x;
+                                          relative_data_.position.y = max_speed*joy_sign_y;
+                                          console.log(relative_data_.position.x);
+                                          console.log(relative_data_.position.y);
+
+                                          /*if(joy_flag || joyL_sign != joyL_sign_old) {
                                             sendMessageJoyL(relative_data_L);
                                             joyL_sign_old = joyL_sign;
                                             joyL_flag = false;
-                                          }
+                                          }*/
                                         }).on('end', function(evt, dataL) {
                                           relative_data_L.position.x = 0;// dataL.position.x - offset_x_L;
                                           relative_data_L.position.y = 0;// dataL.position.y - offset_y_L;
-                                          sendMessageJoyL(relative_data_L);
-                                        });
-
-var joyR_flag = false;
-var joyR_sign_old = 0;
-joystickR.on('start', function(evt, dataR) { 
-                        offset_x_R = dataR.position.x;
-                        offset_y_R = dataR.position.y;
-                        relative_data_R.position.x = dataR.position.x - offset_x_R;
-                        relative_data_R.position.y = dataR.position.y - offset_y_R;
-                        // sendMessageJoyR(relative_data_R);
-                        joyR_flag = true;
-                        }).on('move', function(evt, dataR) {
-                                          relative_data_R.position.x = dataR.position.x - offset_x_R;
-                                          relative_data_R.position.y = dataR.position.y - offset_y_R;
-                                          var joyR_sign = Math.sign(dataR.position.x - offset_x_R);
-                                          relative_data_R.position.x = max_speed*joyR_sign;
-                                          relative_data_R.position.y = 0;
-                                          if(joyR_flag || joyR_sign != joyR_sign_old) {
-                                            sendMessageJoyR(relative_data_R);
-                                            joyR_sign_old = joyR_sign;
-                                            joyR_flag = false;
-                                          }
-                                        }).on('end', function(evt, dataR) {
-                                          relative_data_R.position.x = 0; //dataR.position.x - offset_x_R;
-                                          relative_data_R.position.y = 0; //dataR.position.y - offset_y_R;
-                                          sendMessageJoyR(relative_data_R);
+                                          /*sendMessageJoyL(relative_data_L);*/
                                         });
 
 // Send Joystick value message
