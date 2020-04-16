@@ -15,12 +15,30 @@ var myHostname = "";
 
 var mediaConstraints = {
   audio: false,            // We want an audio track
-  video: true
+  video:{
+    facingMode: 'user'
+  }
   // video: {
   //   aspectRatio: {
   //     ideal: 1.333333     // 3:2 aspect is preferred
   //   }
   // }
+  
+};
+
+var mediaConstraints_env = {
+  audio: false,            // We want an audio track
+  video:{
+    facingMode: { 
+      exact: 'environment'
+    }
+  }
+  // video: {
+  //   aspectRatio: {
+  //     ideal: 1.333333     // 3:2 aspect is preferred
+  //   }
+  // }
+  
 };
 
 var webcamStream = null;        // MediaStream from webcam
