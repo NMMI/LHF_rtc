@@ -324,6 +324,15 @@ wsServer.on('request', function(request) {
             msg.text = msg.text.replace(/(<([^>]+)>)/ig, "");
             break;
 
+          case "joy-message":
+            //console.log("--------------------------------");
+            //console.log("SINGLE JOYSTICK Message in a bottle!");
+            //console.log(msg.value_lin);
+            //console.log(msg.value_ang);
+            //console.log("--------------------------------");
+            sendToOneUser(msg.target, JSON.stringify(msg));
+            break;
+
           case "joyL-message":
             //console.log("--------------------------------");
             //console.log("JOYSTICK LEFT Message in a bottle!");

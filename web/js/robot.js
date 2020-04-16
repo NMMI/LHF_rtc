@@ -565,6 +565,19 @@ function connect() {
         console.log("--------------------------");
         dock_robot();
         break;
+
+      case "joy-message":
+            console.log("--------------------------------");
+            console.log("SINGLE JOYSTICK Message in a bottle!");
+            console.log(msg.value_lin);
+            console.log(msg.value_ang);
+            console.log("--------------------------------");
+            vel_lin = msg.value_lin;
+            vel_ang = msg.value_ang;
+            //num_recv_lin += 1;
+            //div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
+            compute_vel();
+            break;
       
       case "joyL-message":
             console.log("--------------------------------");

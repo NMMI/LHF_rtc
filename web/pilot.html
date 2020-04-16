@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="css/main_generic.css"/>
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/toggle.css">
+
 
 </head>
 
@@ -36,6 +38,13 @@
 <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
   <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
   <button id="dockingButton">Docking station</button>
+  <!-- Rounded switch -->
+    <div id= "audio">
+        <label class="switch">
+            <input type="checkbox" id="audio">
+            <span class="slider round"></span>
+        </label>
+    audio</div>
 </div>
 
 <!-- Page Content -->
@@ -54,8 +63,7 @@
     </div>
 
     <div id="container_text">
-        <div id="div_num_recv_lin"># lin = 0</div>
-        <div id="div_num_recv_ang"># ang = 0</div>
+        <div id="div_num_recv"># cmds = 0</div>
         <div id="ip_address"></div>
         <div id="single_joy"></div>
     </div>

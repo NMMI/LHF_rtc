@@ -78,8 +78,8 @@ const video2 = document.querySelector('video#video2_pilot');
 
 // const audioCheckbox = document.querySelector('input#audio');
 
-const div_num_recv_lin = document.getElementById('div_num_recv_lin');
-const div_num_recv_ang = document.getElementById('div_num_recv_ang');
+const div_num_recv = document.getElementById('div_num_recv');
+//const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
 //const messageButton = document.querySelector('button#messageBtn');
 //const messageText = document.querySelector('input#messageText');
@@ -931,7 +931,7 @@ joystick.on('start', function(evt, data) {
 function sendMessageJoy(v_lin, v_ang)
 {
   num_sent += 1;
-  div_num_recv_lin.innerHTML = `# lin = ${num_sent}`;
+  div_num_recv.innerHTML = `# cmds = ${num_sent}`;
   var message_joy = { 
     name: myUsername,
     target: targetUsername,
