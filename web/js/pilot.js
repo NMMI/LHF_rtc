@@ -28,7 +28,7 @@ var mediaConstraints = {
 var webcamStream = null;        // MediaStream from webcam
 var transceiver = null;         // RTCRtpTransceiver
 
-var num_sent_lin = 0;
+var num_sent = 0;
 var num_sent_ang = 0;
 
 // function log(text) {
@@ -847,66 +847,114 @@ var relative_data = {
 const max_speed = 200;
 var joy_flag = false;
 var joy_sign_old = 0;
+var angle = 0.0;
+var direction = ""
+var direction_old = ""
+var vel_lin = 0;
+var vel_ang = 0;
 joystick.on('start', function(evt, data) { 
-                        offset_x_ = data.position.x;
-                        offset_y_ = data.position.y;
+                        /*offset_x = data.position.x;
+                        offset_y = data.position.y;
                         relative_data.position.x = data.position.x - offset_x;
                         relative_data.position.y = data.position.y - offset_y;
-                        joy_flag = true;
-                        }).on('move', function(evt, dataL) {
-                                          relative_data_.position.x = data.position.x - offset_x;
+                        joy_flag = true;*/
+                        }).on('move', function(evt, data) {
+                                          /*relative_data.position.x = data.position.x - offset_x;
                                           relative_data.position.y = data.position.y - offset_y;
+                                          //console.log(data.angle.degree);
+                                          console.log(data.distance);*/
+                                          angle = data.angle.degree;
+                                          if((angle>=0 && angle<22.5) || (angle>=337.5 && angle<=360))
+                                          {
+                                            direction = "right";
+                                            vel_lin = 0;
+                                            vel_ang = 200;
+                                          }
+                                          else if(angle>=22.5 && angle<67.5)
+                                          {
+                                            direction = "right-up";
+                                            vel_lin = 200;
+                                            vel_ang = 200;
+                                          }
+                                          else if(angle>=67.5 && angle<112.5)
+                                          {
+                                            direction = "up";
+                                            vel_lin = 200;
+                                            vel_ang = 0;
+                                          }
+                                          else if(angle>=112.5 && angle<157.5)
+                                          {
+                                            direction = "left-up";
+                                            vel_lin = 200;
+                                            vel_ang = -200;
+                                          }
+                                          else if(angle>=157.5 && angle<202.5)
+                                          {
+                                            direction = "left";
+                                            vel_lin = 0;
+                                            vel_ang = -200;
+                                          }
+                                          else if(angle>=202.5 && angle<245.5)
+                                          {
+                                            direction = "left-down";
+                                            vel_lin = -200;
+                                            vel_ang = -200;
+                                          }
+                                          else if(angle>=245.5 && angle<292.5)
+                                          {
+                                            direction = "down";
+                                            vel_lin = -200;
+                                            vel_ang = 0;
+                                          }
+                                          else if(angle>=292.5 && angle<337.5)
+                                          {
+                                            direction = "right-down";
+                                            vel_lin = -200;
+                                            vel_ang = 200;
+                                          }
+
+                                          if (direction.localeCompare(direction_old))
+                                          {
+                                            console.log(direction);
+                                            sendMessageJoy(vel_lin, vel_ang);
+                                            direction_old = direction;
+                                          }
+
+
+                                          /*
                                           var joy_sign_y = Math.sign(data.position.y - offset_y);
                                           var joy_sign_x = Math.sign(data.position.x - offset_x);
-                                          relative_data_.position.x = max_speed*joy_sign_x;
-                                          relative_data_.position.y = max_speed*joy_sign_y;
-                                          console.log(relative_data_.position.x);
-                                          console.log(relative_data_.position.y);
-
-                                          /*if(joy_flag || joyL_sign != joyL_sign_old) {
+                                          relative_data.position.x = max_speed*joy_sign_x;
+                                          relative_data.position.y = max_speed*joy_sign_y;
+                                          if(joy_flag || joyL_sign != joyL_sign_old) {
                                             sendMessageJoyL(relative_data_L);
                                             joyL_sign_old = joyL_sign;
                                             joyL_flag = false;
                                           }*/
                                         }).on('end', function(evt, dataL) {
-                                          relative_data_L.position.x = 0;// dataL.position.x - offset_x_L;
-                                          relative_data_L.position.y = 0;// dataL.position.y - offset_y_L;
+                                          vel_lin = 0;
+                                          vel_ang = 0;
+                                          sendMessageJoy(vel_lin, vel_ang);
+                                          relative_data.position.x = 0;// dataL.position.x - offset_x_L;
+                                          relative_data.position.y = 0;// dataL.position.y - offset_y_L;
                                           /*sendMessageJoyL(relative_data_L);*/
                                         });
 
 // Send Joystick value message
-function sendMessageJoyL(value_joyL)
+function sendMessageJoy(v_lin, v_ang)
 {
-  console.log(value_joyL.position);
-  num_sent_lin += 1;
-  div_num_recv_lin.innerHTML = `# lin = ${num_sent_lin}`;
-  var message_joy_L = { 
+  num_sent += 1;
+  div_num_recv_lin.innerHTML = `# lin = ${num_sent}`;
+  var message_joy = { 
     name: myUsername,
     target: targetUsername,
-    type: "joyL-message",
-    value: parseInt(value_joyL.position.y,10)
-    // value: "sinistra"
-    // value: value_joyL.position
+    type: "joy-message",
+    value_lin: parseInt(v_lin,10),
+    value_ang: parseInt(v_ang,10)
   };
-  sendToServer(message_joy_L);
+  sendToServer(message_joy);
 }
 
-
-function sendMessageJoyR(value_joyR)
-{
-  console.log(value_joyR.position);
-  num_sent_ang += 1;
-  div_num_recv_ang.innerHTML = `# ang = ${num_sent_ang}`;
-  var message_joy_R = { 
-    name: myUsername,
-    target: targetUsername,
-    type: "joyR-message",
-    value: parseInt(value_joyR.position.x,10)
-    // value: "destra"
-    // value: value_joyR.position
-  };
-  sendToServer(message_joy_R);
-}
 
 // Docking message
 function sendDockingMessage()
