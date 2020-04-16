@@ -81,8 +81,8 @@ const video2 = document.querySelector('video#video2_pilot');
 const div_num_recv_lin = document.getElementById('div_num_recv_lin');
 const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
-const messageButton = document.querySelector('button#messageBtn');
-const messageText = document.querySelector('input#messageText');
+//const messageButton = document.querySelector('button#messageBtn');
+//const messageText = document.querySelector('input#messageText');
 
 const dockingButton = document.getElementById('dockingButton');
 
@@ -91,7 +91,7 @@ const dockingButton = document.getElementById('dockingButton');
 // const insertRelayButton = document.querySelector('button#insertRelay');
 // const hangupButton = document.querySelector('button#hangup');
 
-messageButton.onclick = sendMessageButton;
+//messageButton.onclick = sendMessageButton;
 dockingButton.onclick = sendDockingMessage;
 
 // startButton.onclick = start;
@@ -429,7 +429,7 @@ function handleTrackEvent(event) {
   console.log("*** Track event");
   video2.srcObject = event.streams[0];
   // document.getElementById("video2").srcObject = event.streams[0];
-  document.getElementById("hangup").disabled = false;
+  //document.getElementById("hangup").disabled = false;
 }
 
 // signaling stuff

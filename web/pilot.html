@@ -35,9 +35,7 @@
     <!-- Sidebar -->
 <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
   <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
-  <a href="#" class="w3-bar-item w3-button">Link 1</a>
-  <a href="#" class="w3-bar-item w3-button">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+  <button id="dockingButton">Docking station</button>
 </div>
 
 <!-- Page Content -->
@@ -50,44 +48,32 @@
 
 <div id="container">
 
-    <!-- <h1>Camera Pilota
-    </h1> -->
-
     <div id="videos">
         <video id="video1_pilot" playsinline autoplay muted></video>
         <video id="video2_pilot" playsinline autoplay></video>
     </div>
-    <button id="dockingButton">Docking station</button>
 
-    <!-- <section><input type="checkbox" id="audio"><label for="audio">Include audio (supported in Chrome 49 and above)</label></section> -->
+    <div id="container_text">
+        <div id="div_num_recv_lin"># lin = 0</div>
+        <div id="div_num_recv_ang"># ang = 0</div>
+        <div id="ip_address"></div>
+        <div id="single_joy"></div>
+    </div>
 
-    <!-- <div id="buttons">
-        <button id="start">Start</button>
-        <button id="call" disabled>Call</button>
-        <button id="insertRelay" disabled>Insert relay</button>
-        <button id="hangup" disabled>Hang Up</button>
-    </div> -->
-
-    <div id="status"></div>
-
-    <div id="div_num_recv_lin"># lin = 0</div>
-    <div id="div_num_recv_ang"># ang = 0</div>
-
-    <div id="messages">
+    <!--div id="messages">
         <ul id="messages"></ul>
         <form action="">
         <input id="messageText" autocomplete="off" />
         </form>
         <button id="messageBtn">Invia messaggio</button>
-    </div>
+    </div-->
+
 </div>
 
 <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
 <!-- <script src="js/videopipe.js"></script> -->
 
-<div id="ip_address"></div>
 
-<div id="single_joy"></div>
 <script src="node_modules/nipplejs/dist/nipplejs.js"></script>
 
 <script>
@@ -96,7 +82,7 @@
         mode: 'static',
         position: { left: '80%', top: '50%' },
         color: 'green',
-        size: 200
+        size: 300
     });
 
 </script>
