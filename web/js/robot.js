@@ -57,10 +57,10 @@ var num_recv_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-//const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.207.185";
 
 // const SERVER_IP_ = "10.244.107.78";
-const SERVER_IP_ = "127.0.0.1";
+//const SERVER_IP_ = "127.0.0.1";
 
 
 function startupCode()
@@ -90,8 +90,8 @@ function startupCode()
 }
 
 
-const video1 = document.querySelector('video#video2_robot'); // TODO fix
-const video2 = document.querySelector('video#video1_robot');
+const video1 = document.querySelector('video#video1_robot'); // TODO fix
+const video2 = document.querySelector('video#video2_robot');
 
 // const statusDiv = document.querySelector('div#status');
 
@@ -958,7 +958,10 @@ function dock_robot()
 
 function switch_function(el) {    
     if (el.checked) {
-      audioCheckbox.muted = false;
+      video2.muted = false;
     }
-    else audioCheckbox.muted = true;
+    else
+    {
+      video2.muted = true;
+    } 
   }
