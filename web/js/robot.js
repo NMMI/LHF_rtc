@@ -95,7 +95,7 @@ const video2 = document.querySelector('video#video1_robot');
 
 // const statusDiv = document.querySelector('div#status');
 
-// const audioCheckbox = document.querySelector('input#audio');
+const audioCheckbox = document.querySelector('input#audio');
 const div_num_recv = document.getElementById('div_num_recv');
 //const div_num_recv_lin = document.getElementById('div_num_recv_lin');
 //const div_num_recv_ang = document.getElementById('div_num_recv_ang');
@@ -955,3 +955,10 @@ function dock_robot()
 {
   window.root.device.motors.dockRobot();
 }
+
+function switch_function(el) {    
+    if (el.checked) {
+      audioCheckbox.muted = false;
+    }
+    else audioCheckbox.muted = true;
+  }

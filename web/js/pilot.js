@@ -76,7 +76,7 @@ const video2 = document.querySelector('video#video2_pilot');
 
 // const statusDiv = document.querySelector('div#status');
 
-// const audioCheckbox = document.querySelector('input#audio');
+const audioCheckbox = document.querySelector('input#audio');
 
 const div_num_recv = document.getElementById('div_num_recv');
 //const div_num_recv_ang = document.getElementById('div_num_recv_ang');
@@ -854,56 +854,57 @@ joystick.on('start', function(evt, data) {
                         /*nothing*/
                         }).on('move', function(evt, data) {
                                           angle = data.angle.degree;
+
                                           if((angle>=0 && angle<22.5) || (angle>=337.5 && angle<=360))
                                           {
                                             direction = "right";
                                             vel_lin = 0;
-                                            vel_ang = 200;
+                                            vel_ang = max_speed;
                                           }
                                           else if(angle>=22.5 && angle<67.5)
                                           {
                                             direction = "right-up";
-                                            vel_lin = 200;
-                                            vel_ang = 200;
+                                            vel_lin = max_speed;
+                                            vel_ang = max_speed;
                                           }
                                           else if(angle>=67.5 && angle<112.5)
                                           {
                                             direction = "up";
-                                            vel_lin = 200;
+                                            vel_lin = max_speed;
                                             vel_ang = 0;
                                           }
                                           else if(angle>=112.5 && angle<157.5)
                                           {
                                             direction = "left-up";
-                                            vel_lin = 200;
-                                            vel_ang = -200;
+                                            vel_lin = max_speed;
+                                            vel_ang = -max_speed;
                                           }
                                           else if(angle>=157.5 && angle<202.5)
                                           {
                                             direction = "left";
                                             vel_lin = 0;
-                                            vel_ang = -200;
+                                            vel_ang = -max_speed;
                                           }
                                           else if(angle>=202.5 && angle<245.5)
                                           {
                                             direction = "left-down";
-                                            vel_lin = -200;
-                                            vel_ang = -200;
+                                            vel_lin = -max_speed;
+                                            vel_ang = -max_speed;
                                           }
                                           else if(angle>=245.5 && angle<292.5)
                                           {
                                             direction = "down";
-                                            vel_lin = -200;
+                                            vel_lin = -max_speed;
                                             vel_ang = 0;
                                           }
                                           else if(angle>=292.5 && angle<337.5)
                                           {
                                             direction = "right-down";
-                                            vel_lin = -200;
-                                            vel_ang = 200;
+                                            vel_lin = -max_speed;
+                                            vel_ang = max_speed;
                                           }
 
-                                          if (direction.localeCompare(direction_old))
+                                          if (direction.localeCompare(direction_old) && data.distance > 20)
                                           {
                                             console.log(direction);
                                             sendMessageJoy(vel_lin, vel_ang);
@@ -953,3 +954,10 @@ function sendDockingMessage()
   };
   sendToServer(message_dock_robot);
 }
+
+function switch_function(el) {    
+    if (el.checked) {
+      audioCheckbox.muted = false;
+    }
+    else audioCheckbox.muted = true;
+  }
