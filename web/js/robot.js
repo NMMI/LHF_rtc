@@ -14,7 +14,7 @@ var targetUsername = "PILOT";
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: false,            // We want an audio track
+  audio: true,            // We want an audio track
   video: {
     facingMode: 'user'
   }
