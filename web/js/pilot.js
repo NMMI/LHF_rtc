@@ -41,8 +41,8 @@ var num_sent_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-// const SERVER_IP_ = "10.244.207.185";
-const SERVER_IP_ = "127.0.0.1";
+const SERVER_IP_ = "10.244.207.185";
+//const SERVER_IP_ = "127.0.0.1";
 
 function startupCode()
 {
