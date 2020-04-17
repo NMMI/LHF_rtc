@@ -28,9 +28,7 @@ var mediaConstraints = {
 
 var mediaConstraints_env = {
   audio: false,            // We want an audio track
-  video:{
-    facingMode: 'environment'
-  }
+  video: true
 };
 
 var webcamStream = null;        // MediaStream from webcam
@@ -40,7 +38,7 @@ var vel_Left = 0.0;
 var vel_Right = 0.0;
 var vel_lin = 0.0;
 var vel_ang = 0.0;
-const W_wheel = 0.30;
+const W_wheel = 0.5;
 const R_wheel = 1.0;
 
 var num_recv = 0;
@@ -57,10 +55,10 @@ var num_recv_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-//const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.207.185";
 
 // const SERVER_IP_ = "10.244.107.78";
-const SERVER_IP_ = "10.244.107.78";
+//const SERVER_IP_ = "10.244.107.78";
 
 
 function startupCode()
@@ -911,10 +909,10 @@ function compute_vel() {
   vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
   /*console.log(Math.round(vel_Left));
   console.log(Math.round(vel_Right));*/
-  // if(vel_Left < -100) { vel_Left = -100; }
-  // if(vel_Left > 100) {vel_Left = 100;}
-  // if(vel_Right < -100) { vel_Right = -100; }
-  // if(vel_Right > 100) {vel_Right = 100;}
+  if(vel_Left < -200) { vel_Left = -200; }
+  if(vel_Left > 200) {vel_Left = 200;}
+  if(vel_Right < -200) { vel_Right = -200; }
+  if(vel_Right > 200) {vel_Right = 200;}
   console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
   if(window.root != null)
   {

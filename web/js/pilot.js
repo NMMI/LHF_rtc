@@ -41,8 +41,8 @@ var num_sent_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-//const SERVER_IP_ = "10.244.207.185";
-const SERVER_IP_ = "10.244.107.78";
+const SERVER_IP_ = "10.244.207.185";
+//const SERVER_IP_ = "10.244.107.78";
 
 function startupCode()
 {
@@ -844,7 +844,7 @@ var relative_data = {
   };
 
 //Retrieve Joysticks values
-const max_speed = 200;
+const max_speed = 150;
 var angle = 0.0;
 var direction = ""
 var direction_old = ""
@@ -859,13 +859,13 @@ joystick.on('start', function(evt, data) {
                                           {
                                             direction = "right";
                                             vel_lin = 0;
-                                            vel_ang = max_speed;
+                                            vel_ang = -max_speed;
                                           }
                                           else if(angle>=22.5 && angle<67.5)
                                           {
                                             direction = "right-up";
                                             vel_lin = max_speed;
-                                            vel_ang = max_speed;
+                                            vel_ang = -max_speed;
                                           }
                                           else if(angle>=67.5 && angle<112.5)
                                           {
@@ -877,19 +877,19 @@ joystick.on('start', function(evt, data) {
                                           {
                                             direction = "left-up";
                                             vel_lin = max_speed;
-                                            vel_ang = -max_speed;
+                                            vel_ang = max_speed;
                                           }
                                           else if(angle>=157.5 && angle<202.5)
                                           {
                                             direction = "left";
                                             vel_lin = 0;
-                                            vel_ang = -max_speed;
+                                            vel_ang = max_speed;
                                           }
                                           else if(angle>=202.5 && angle<245.5)
                                           {
                                             direction = "left-down";
                                             vel_lin = -max_speed;
-                                            vel_ang = -max_speed;
+                                            vel_ang = max_speed;
                                           }
                                           else if(angle>=245.5 && angle<292.5)
                                           {
@@ -901,10 +901,35 @@ joystick.on('start', function(evt, data) {
                                           {
                                             direction = "right-down";
                                             vel_lin = -max_speed;
-                                            vel_ang = max_speed;
+                                            vel_ang = -max_speed;
                                           }
 
-                                          if (direction.localeCompare(direction_old) && data.distance > 20)
+                                          /*if((angle>=0 && angle<45) || (angle>=315 && angle<=360))
+                                          {
+                                            direction = "right";
+                                            vel_lin = 0;
+                                            vel_ang = -max_speed;
+                                          }
+                                          else if(angle>=45 && angle<135)
+                                          {
+                                            direction = "up";
+                                            vel_lin = max_speed;
+                                            vel_ang = 0;
+                                          }
+                                          else if(angle>=135 && angle<225)
+                                          {
+                                            direction = "left";
+                                            vel_lin = 0;
+                                            vel_ang = max_speed;
+                                          }
+                                          else if(angle>=225 && angle<315)
+                                          {
+                                            direction = "down";
+                                            vel_lin = -max_speed;
+                                            vel_ang = 0;
+                                          }*/
+
+                                          if (direction.localeCompare(direction_old) && data.distance > 95)
                                           {
                                             console.log(direction);
                                             sendMessageJoy(vel_lin, vel_ang);
