@@ -43,6 +43,7 @@ var vel_ang = 0.0;
 const W_wheel = 0.30;
 const R_wheel = 1.0;
 
+var num_recv = 0;
 var num_recv_lin = 0;
 var num_recv_ang = 0;
 
@@ -95,8 +96,9 @@ const video2 = document.querySelector('video#video1_robot');
 // const statusDiv = document.querySelector('div#status');
 
 // const audioCheckbox = document.querySelector('input#audio');
-const div_num_recv_lin = document.getElementById('div_num_recv_lin');
-const div_num_recv_ang = document.getElementById('div_num_recv_ang');
+const div_num_recv = document.getElementById('div_num_recv');
+//const div_num_recv_lin = document.getElementById('div_num_recv_lin');
+//const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 // const startButton = document.querySelector('button#start');
 // const callButton = document.querySelector('button#call');
 // const insertRelayButton = document.querySelector('button#insertRelay');
@@ -584,8 +586,8 @@ function connect() {
             console.log("--------------------------------");
             vel_lin = msg.value_lin;
             vel_ang = msg.value_ang;
-            //num_recv_lin += 1;
-            //div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
+            num_recv += 1;
+            div_num_recv.innerHTML = `# num_recv = ${num_recv}`;
             compute_vel();
             break;
       
@@ -596,7 +598,7 @@ function connect() {
             console.log("--------------------------------");
             vel_lin = -msg.value;
             num_recv_lin += 1;
-            div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
+            //div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
             compute_vel();
             break;
 
@@ -607,7 +609,7 @@ function connect() {
             console.log("--------------------------------");
             vel_ang = -msg.value;
             num_recv_ang += 1;
-            div_num_recv_ang.innerHTML = `# ang = ${num_recv_ang}`;
+            //div_num_recv_ang.innerHTML = `# ang = ${num_recv_ang}`;
             compute_vel();
             break;
 
