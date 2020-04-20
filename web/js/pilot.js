@@ -937,7 +937,7 @@ joystick.on('start', function(evt, data) {
                                             direction_old = direction;
                                             flag_send_zero = true;
                                           }
-                                          else if(data.distance < 40 && flag_send_zero)
+                                          else if(flag_send_zero)
                                           {
                                             vel_lin = 0;
                                             vel_ang = 0;
