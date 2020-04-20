@@ -41,8 +41,8 @@ var num_sent_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-const SERVER_IP_ = "10.244.207.185";
-//const SERVER_IP_ = "10.244.107.78";
+//const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.86.201";
 
 function startupCode()
 {
@@ -850,6 +850,7 @@ var direction = ""
 var direction_old = ""
 var vel_lin = 0;
 var vel_ang = 0;
+var flag_send_zero = false;
 joystick.on('start', function(evt, data) { 
                         /*nothing*/
                         }).on('move', function(evt, data) {
@@ -929,11 +930,19 @@ joystick.on('start', function(evt, data) {
                                             vel_ang = 0;
                                           }*/
 
-                                          if (direction.localeCompare(direction_old) && data.distance > 95)
+                                          if (direction.localeCompare(direction_old) && data.distance > 90)
                                           {
-                                            console.log(direction);
+                                            //console.log(direction);
                                             sendMessageJoy(vel_lin, vel_ang);
                                             direction_old = direction;
+                                            flag_send_zero = true;
+                                          }
+                                          else if(data.distance < 40 && flag_send_zero)
+                                          {
+                                            vel_lin = 0;
+                                            vel_ang = 0;
+                                            sendMessageJoy(vel_lin, vel_ang);
+                                            flag_send_zero = false;
                                           }
 
 
@@ -951,6 +960,7 @@ joystick.on('start', function(evt, data) {
                                           vel_lin = 0;
                                           vel_ang = 0;
                                           sendMessageJoy(vel_lin, vel_ang);
+                                          flag_send_zero = false;
                                         });
 
 // Send Joystick value message
