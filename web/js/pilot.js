@@ -930,14 +930,14 @@ joystick.on('start', function(evt, data) {
                                             vel_ang = 0;
                                           }*/
 
-                                          if (direction.localeCompare(direction_old) && data.distance > 70)
+                                          if (direction.localeCompare(direction_old) && data.distance > 80)
                                           {
                                             //console.log(direction);
                                             sendMessageJoy(vel_lin, vel_ang);
                                             direction_old = direction;
                                             flag_send_zero = true;
                                           }
-                                          else if(flag_send_zero)
+                                          else if(data.distance < 40 && flag_send_zero)
                                           {
                                             vel_lin = 0;
                                             vel_ang = 0;
@@ -957,10 +957,13 @@ joystick.on('start', function(evt, data) {
                                             joyL_flag = false;
                                           }*/
                                         }).on('end', function(evt, data) {
-                                          vel_lin = 0;
-                                          vel_ang = 0;
-                                          sendMessageJoy(vel_lin, vel_ang);
-                                          flag_send_zero = false;
+                                          if(flag_send_zero){
+                                            vel_lin = 0;
+                                            vel_ang = 0;
+                                            sendMessageJoy(vel_lin, vel_ang);
+                                            flag_send_zero = false;
+                                          }
+                                          
                                         });
 
 // Send Joystick value message
