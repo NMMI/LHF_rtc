@@ -930,7 +930,7 @@ joystick.on('start', function(evt, data) {
                                             vel_ang = 0;
                                           }*/
 
-                                          if (direction.localeCompare(direction_old) && data.distance > 90)
+                                          if (direction.localeCompare(direction_old) && data.distance > 70)
                                           {
                                             //console.log(direction);
                                             sendMessageJoy(vel_lin, vel_ang);
