@@ -6,9 +6,27 @@
  *  tree.
  */
 
- button {
+ /*button {
     margin: 20px 10px 0 0;
     width: 100px;
+  }*/
+  button#dockingButton{
+    background-color: white;
+    border: none;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5em;
+    margin: 0 0 1em 0;
+    padding: 0.5em 0.7em 0.6em 0.7em;
+  }
+  div#audio{
+    float: left;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2em;
+  }
+
+  button#but_sidebar{
+    width: 300px;
   }
   
   div#buttons {
@@ -19,6 +37,12 @@
     height: 2em;
     margin: 1em 0 0 0;
   }
+  div#container_text{
+    /*background-image: url('img/logo_lhf.png');
+    position:absolute;
+    top:0;
+    right:0;*/
+  }
   
   input#audio {
     margin: 0 0.5em 0 0;
@@ -27,28 +51,32 @@
   }
   
   video#video2_pilot {
-    height: 100%;
-    width: 50%;
+    height: 93vh;
+    width: auto;
+    float: left;
   }
   
   video#video1_pilot {
     position:absolute;
     height: 10%;
-    width: 100%;
+    width: auto;
+    border-radius: 10px;
   }
 
   video#video2_robot {
-    height: 100%;
-    width: 50%;
+    height: 79vh;
+    width: auto;
+    float: left;
   }
   
   video#video1_robot {
     position:absolute;
     height: 10%;
-    width: 100%;
+    width: auto;
+    border-radius: 10px;
   }
 
-  div#videos {
+  /*div#videos {
       display: flex;
       flex-direction: column;
       align-items: center;

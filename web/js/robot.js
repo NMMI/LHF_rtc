@@ -14,13 +14,21 @@ var targetUsername = "PILOT";
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: false,            // We want an audio track
-  video: true
+  audio: true,            // We want an audio track
+  video: {
+    facingMode: 'user'
+  }
   // video: {
   //   aspectRatio: {
   //     ideal: 1.333333     // 3:2 aspect is preferred
   //   }
   // }
+  
+};
+
+var mediaConstraints_env = {
+  audio: false,            // We want an audio track
+  video: true
 };
 
 var webcamStream = null;        // MediaStream from webcam
@@ -30,9 +38,10 @@ var vel_Left = 0.0;
 var vel_Right = 0.0;
 var vel_lin = 0.0;
 var vel_ang = 0.0;
-const W_wheel = 0.30;
+const W_wheel = 0.5;
 const R_wheel = 1.0;
 
+var num_recv = 0;
 var num_recv_lin = 0;
 var num_recv_ang = 0;
 
@@ -46,10 +55,10 @@ var num_recv_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-// const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.207.185";
 
-// const SERVER_IP_ = "10.244.107.78";
-const SERVER_IP_ = "10.244.107.78";
+//const SERVER_IP_ = "10.244.86.201";
+//const SERVER_IP_ = "10.244.107.78";
 
 
 function startupCode()
@@ -79,14 +88,15 @@ function startupCode()
 }
 
 
-const video1 = document.querySelector('video#video2_robot'); // TODO fix
-const video2 = document.querySelector('video#video1_robot');
+const video1 = document.querySelector('video#video1_robot'); // TODO fix
+const video2 = document.querySelector('video#video2_robot');
 
 // const statusDiv = document.querySelector('div#status');
 
-// const audioCheckbox = document.querySelector('input#audio');
-const div_num_recv_lin = document.getElementById('div_num_recv_lin');
-const div_num_recv_ang = document.getElementById('div_num_recv_ang');
+const audioCheckbox = document.querySelector('input#audio');
+const div_num_recv = document.getElementById('div_num_recv');
+//const div_num_recv_lin = document.getElementById('div_num_recv_lin');
+//const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 // const startButton = document.querySelector('button#start');
 // const callButton = document.querySelector('button#call');
 // const insertRelayButton = document.querySelector('button#insertRelay');
@@ -565,6 +575,19 @@ function connect() {
         console.log("--------------------------");
         dock_robot();
         break;
+
+      case "joy-message":
+            console.log("--------------------------------");
+            console.log("SINGLE JOYSTICK Message in a bottle!");
+            console.log(msg.value_lin);
+            console.log(msg.value_ang);
+            console.log("--------------------------------");
+            vel_lin = msg.value_lin;
+            vel_ang = msg.value_ang;
+            num_recv += 1;
+            div_num_recv.innerHTML = `# num_recv = ${num_recv}`;
+            compute_vel();
+            break;
       
       case "joyL-message":
             console.log("--------------------------------");
@@ -573,7 +596,7 @@ function connect() {
             console.log("--------------------------------");
             vel_lin = -msg.value;
             num_recv_lin += 1;
-            div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
+            //div_num_recv_lin.innerHTML = `# lin = ${num_recv_lin}`;
             compute_vel();
             break;
 
@@ -584,7 +607,7 @@ function connect() {
             console.log("--------------------------------");
             vel_ang = -msg.value;
             num_recv_ang += 1;
-            div_num_recv_ang.innerHTML = `# ang = ${num_recv_ang}`;
+            //div_num_recv_ang.innerHTML = `# ang = ${num_recv_ang}`;
             compute_vel();
             break;
 
@@ -886,10 +909,10 @@ function compute_vel() {
   vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
   /*console.log(Math.round(vel_Left));
   console.log(Math.round(vel_Right));*/
-  // if(vel_Left < -100) { vel_Left = -100; }
-  // if(vel_Left > 100) {vel_Left = 100;}
-  // if(vel_Right < -100) { vel_Right = -100; }
-  // if(vel_Right > 100) {vel_Right = 100;}
+  if(vel_Left < -200) { vel_Left = -200; }
+  if(vel_Left > 200) {vel_Left = 200;}
+  if(vel_Right < -200) { vel_Right = -200; }
+  if(vel_Right > 200) {vel_Right = 200;}
   console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
   if(window.root != null)
   {
@@ -930,3 +953,13 @@ function dock_robot()
 {
   window.root.device.motors.dockRobot();
 }
+
+function switch_function(el) {    
+    if (el.checked) {
+      video2.muted = false;
+    }
+    else
+    {
+      video2.muted = true;
+    } 
+  }

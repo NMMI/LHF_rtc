@@ -16,7 +16,7 @@ var targetUsername = "ROBOT";
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: false,            // We want an audio track
+  audio: true,            // We want an audio track
   video: true
   /*video: {
     aspectRatio: {
@@ -28,7 +28,7 @@ var mediaConstraints = {
 var webcamStream = null;        // MediaStream from webcam
 var transceiver = null;         // RTCRtpTransceiver
 
-var num_sent_lin = 0;
+var num_sent = 0;
 var num_sent_ang = 0;
 
 // function log(text) {
@@ -41,8 +41,9 @@ var num_sent_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-// const SERVER_IP_ = "10.244.207.185";
-const SERVER_IP_ = "10.244.107.78";
+const SERVER_IP_ = "10.244.207.185";
+//const SERVER_IP_ = "10.244.86.201";
+//const SERVER_IP_ = "10.244.107.78";
 
 function startupCode()
 {
@@ -76,13 +77,13 @@ const video2 = document.querySelector('video#video2_pilot');
 
 // const statusDiv = document.querySelector('div#status');
 
-// const audioCheckbox = document.querySelector('input#audio');
+const audioCheckbox = document.querySelector('input#audio');
 
-const div_num_recv_lin = document.getElementById('div_num_recv_lin');
-const div_num_recv_ang = document.getElementById('div_num_recv_ang');
+const div_num_recv = document.getElementById('div_num_recv');
+//const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
-const messageButton = document.querySelector('button#messageBtn');
-const messageText = document.querySelector('input#messageText');
+//const messageButton = document.querySelector('button#messageBtn');
+//const messageText = document.querySelector('input#messageText');
 
 const dockingButton = document.getElementById('dockingButton');
 
@@ -91,7 +92,7 @@ const dockingButton = document.getElementById('dockingButton');
 // const insertRelayButton = document.querySelector('button#insertRelay');
 // const hangupButton = document.querySelector('button#hangup');
 
-messageButton.onclick = sendMessageButton;
+//messageButton.onclick = sendMessageButton;
 dockingButton.onclick = sendDockingMessage;
 
 // startButton.onclick = start;
@@ -429,7 +430,7 @@ function handleTrackEvent(event) {
   console.log("*** Track event");
   video2.srcObject = event.streams[0];
   // document.getElementById("video2").srcObject = event.streams[0];
-  document.getElementById("hangup").disabled = false;
+  //document.getElementById("hangup").disabled = false;
 }
 
 // signaling stuff
@@ -831,11 +832,10 @@ function sendMessageButton()
   sendToServer(message);
 }
 
-var offset_x_L;
-var offset_y_L;
-var offset_x_R;
-var offset_y_R;
-var relative_data_L = { 
+var offset_x;
+var offset_y;
+
+var relative_data = { 
     position: 
       {
         x : 0.0,
@@ -844,102 +844,146 @@ var relative_data_L = {
       }
   };
 
-  var relative_data_R = { 
-    position: 
-      {
-        x : 0.0,
-        y : 0.0
-
-      }
-  };
 //Retrieve Joysticks values
-const max_speed = 200;
-var joyL_flag = false;
-var joyL_sign_old = 0;
-joystickL.on('start', function(evt, dataL) { 
-                        offset_x_L = dataL.position.x;
-                        offset_y_L = dataL.position.y;
-                        relative_data_L.position.x = dataL.position.x - offset_x_L;
-                        relative_data_L.position.y = dataL.position.y - offset_y_L;
-                        //console.log(offset_x_L);
-                        // sendMessageJoyL(relative_data_L);
-                        joyL_flag = true;
-                        }).on('move', function(evt, dataL) {
-                                          relative_data_L.position.x = dataL.position.x - offset_x_L;
-                                          relative_data_L.position.y = dataL.position.y - offset_y_L;
-                                          var joyL_sign = Math.sign(dataL.position.y - offset_y_L);
-                                          relative_data_L.position.x = 0;
-                                          relative_data_L.position.y = max_speed*joyL_sign;
-                                          if(joyL_flag || joyL_sign != joyL_sign_old) {
+const max_speed = 150;
+var angle = 0.0;
+var direction = ""
+var direction_old = ""
+var vel_lin = 0;
+var vel_ang = 0;
+var flag_send_zero = false;
+joystick.on('start', function(evt, data) { 
+                        /*nothing*/
+                        }).on('move', function(evt, data) {
+                                          angle = data.angle.degree;
+
+                                          if((angle>=0 && angle<22.5) || (angle>=337.5 && angle<=360))
+                                          {
+                                            direction = "right";
+                                            vel_lin = 0;
+                                            vel_ang = -max_speed;
+                                          }
+                                          else if(angle>=22.5 && angle<67.5)
+                                          {
+                                            direction = "right-up";
+                                            vel_lin = max_speed;
+                                            vel_ang = -max_speed;
+                                          }
+                                          else if(angle>=67.5 && angle<112.5)
+                                          {
+                                            direction = "up";
+                                            vel_lin = max_speed;
+                                            vel_ang = 0;
+                                          }
+                                          else if(angle>=112.5 && angle<157.5)
+                                          {
+                                            direction = "left-up";
+                                            vel_lin = max_speed;
+                                            vel_ang = max_speed;
+                                          }
+                                          else if(angle>=157.5 && angle<202.5)
+                                          {
+                                            direction = "left";
+                                            vel_lin = 0;
+                                            vel_ang = max_speed;
+                                          }
+                                          else if(angle>=202.5 && angle<245.5)
+                                          {
+                                            direction = "left-down";
+                                            vel_lin = -max_speed;
+                                            vel_ang = max_speed;
+                                          }
+                                          else if(angle>=245.5 && angle<292.5)
+                                          {
+                                            direction = "down";
+                                            vel_lin = -max_speed;
+                                            vel_ang = 0;
+                                          }
+                                          else if(angle>=292.5 && angle<337.5)
+                                          {
+                                            direction = "right-down";
+                                            vel_lin = -max_speed;
+                                            vel_ang = -max_speed;
+                                          }
+
+                                          /*if((angle>=0 && angle<45) || (angle>=315 && angle<=360))
+                                          {
+                                            direction = "right";
+                                            vel_lin = 0;
+                                            vel_ang = -max_speed;
+                                          }
+                                          else if(angle>=45 && angle<135)
+                                          {
+                                            direction = "up";
+                                            vel_lin = max_speed;
+                                            vel_ang = 0;
+                                          }
+                                          else if(angle>=135 && angle<225)
+                                          {
+                                            direction = "left";
+                                            vel_lin = 0;
+                                            vel_ang = max_speed;
+                                          }
+                                          else if(angle>=225 && angle<315)
+                                          {
+                                            direction = "down";
+                                            vel_lin = -max_speed;
+                                            vel_ang = 0;
+                                          }*/
+
+                                          if (direction.localeCompare(direction_old) && data.distance > 80)
+                                          {
+                                            //console.log(direction);
+                                            sendMessageJoy(vel_lin, vel_ang);
+                                            direction_old = direction;
+                                            flag_send_zero = true;
+                                          }
+                                          else if(data.distance < 40 && flag_send_zero)
+                                          {
+                                            direction_old = "NULL";
+                                            vel_lin = 0;
+                                            vel_ang = 0;
+                                            sendMessageJoy(vel_lin, vel_ang);
+                                            flag_send_zero = false;
+                                          }
+
+
+                                          /*
+                                          var joy_sign_y = Math.sign(data.position.y - offset_y);
+                                          var joy_sign_x = Math.sign(data.position.x - offset_x);
+                                          relative_data.position.x = max_speed*joy_sign_x;
+                                          relative_data.position.y = max_speed*joy_sign_y;
+                                          if(joy_flag || joyL_sign != joyL_sign_old) {
                                             sendMessageJoyL(relative_data_L);
                                             joyL_sign_old = joyL_sign;
                                             joyL_flag = false;
+                                          }*/
+                                        }).on('end', function(evt, data) {
+                                          if(flag_send_zero){
+                                            direction_old = "NULL";
+                                            vel_lin = 0;
+                                            vel_ang = 0;
+                                            sendMessageJoy(vel_lin, vel_ang);
+                                            flag_send_zero = false;
                                           }
-                                        }).on('end', function(evt, dataL) {
-                                          relative_data_L.position.x = 0;// dataL.position.x - offset_x_L;
-                                          relative_data_L.position.y = 0;// dataL.position.y - offset_y_L;
-                                          sendMessageJoyL(relative_data_L);
-                                        });
-
-var joyR_flag = false;
-var joyR_sign_old = 0;
-joystickR.on('start', function(evt, dataR) { 
-                        offset_x_R = dataR.position.x;
-                        offset_y_R = dataR.position.y;
-                        relative_data_R.position.x = dataR.position.x - offset_x_R;
-                        relative_data_R.position.y = dataR.position.y - offset_y_R;
-                        // sendMessageJoyR(relative_data_R);
-                        joyR_flag = true;
-                        }).on('move', function(evt, dataR) {
-                                          relative_data_R.position.x = dataR.position.x - offset_x_R;
-                                          relative_data_R.position.y = dataR.position.y - offset_y_R;
-                                          var joyR_sign = Math.sign(dataR.position.x - offset_x_R);
-                                          relative_data_R.position.x = max_speed*joyR_sign;
-                                          relative_data_R.position.y = 0;
-                                          if(joyR_flag || joyR_sign != joyR_sign_old) {
-                                            sendMessageJoyR(relative_data_R);
-                                            joyR_sign_old = joyR_sign;
-                                            joyR_flag = false;
-                                          }
-                                        }).on('end', function(evt, dataR) {
-                                          relative_data_R.position.x = 0; //dataR.position.x - offset_x_R;
-                                          relative_data_R.position.y = 0; //dataR.position.y - offset_y_R;
-                                          sendMessageJoyR(relative_data_R);
+                                          
                                         });
 
 // Send Joystick value message
-function sendMessageJoyL(value_joyL)
+function sendMessageJoy(v_lin, v_ang)
 {
-  console.log(value_joyL.position);
-  num_sent_lin += 1;
-  div_num_recv_lin.innerHTML = `# lin = ${num_sent_lin}`;
-  var message_joy_L = { 
+  num_sent += 1;
+  div_num_recv.innerHTML = `# cmds = ${num_sent}`;
+  var message_joy = { 
     name: myUsername,
     target: targetUsername,
-    type: "joyL-message",
-    value: parseInt(value_joyL.position.y,10)
-    // value: "sinistra"
-    // value: value_joyL.position
+    type: "joy-message",
+    value_lin: parseInt(v_lin,10),
+    value_ang: parseInt(v_ang,10)
   };
-  sendToServer(message_joy_L);
+  sendToServer(message_joy);
 }
 
-
-function sendMessageJoyR(value_joyR)
-{
-  console.log(value_joyR.position);
-  num_sent_ang += 1;
-  div_num_recv_ang.innerHTML = `# ang = ${num_sent_ang}`;
-  var message_joy_R = { 
-    name: myUsername,
-    target: targetUsername,
-    type: "joyR-message",
-    value: parseInt(value_joyR.position.x,10)
-    // value: "destra"
-    // value: value_joyR.position
-  };
-  sendToServer(message_joy_R);
-}
 
 // Docking message
 function sendDockingMessage()
@@ -951,3 +995,14 @@ function sendDockingMessage()
   };
   sendToServer(message_dock_robot);
 }
+
+function switch_function(el) {    
+    if (el.checked) {
+      video2.muted = false;
+    }
+    else
+    {
+      video2.muted = true;
+    } 
+
+  }

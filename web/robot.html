@@ -26,6 +26,8 @@
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/main_generic.css"/>
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/toggle.css">
 
     <!-- ********************************************BLE browser STUFF*****************************************************-->
     <meta charset="utf-8">
@@ -40,6 +42,27 @@
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script> -->
     <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
 
+        <!-- Sidebar -->
+    <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
+      <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
+
+      <!-- Rounded switch -->
+        <div id= "audio">
+            <label class="switch">
+                <input type="checkbox" id="audio" onchange="switch_function(this)" checked>
+                <span class="slider round"></span>
+            </label>
+        audio</div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="w3-teal">
+      <button id="but_sidebar" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">☰ LHF-connect Robot</button>
+      <!--div class="w3-container" style = "float: center">
+        <h1>LHF-connect Pilot</h1>
+      </div-->
+    </div>
+
 <!-- ********************************************BLE browser STUFF*****************************************************-->
 <script src="//cdn.jsdelivr.net/npm/eruda"></script>
 <script>eruda.init();</script>
@@ -47,18 +70,7 @@
 <!-- <h1>Root Robot Bluetooth Low Energy Protocol Implementation in Javascript</h1> -->
 
 
-<button class="btn" id="btnScanAndConnect">Scan and connect</button>
-<button class="btn" id="btnDisconnect" disabled>Disconnect</button>
 
-<!-- <button class="btn" id="moveBtn" disabled>Muovi robot</button> -->
-<button class="btn" id="rotateBtn" >Ruota robot</button>
-<button class="btn" id="rotateAnversaBtn" >Ruota all'anversa</button>
-<button class="btn" id="forwardBtn" >Avanti</button>
-<button class="btn" id="backwardBtn" >Indietro</button>
-<button class="btn" id="stopBtn" >Stop robot</button>
-
-
-<div id="ip_address"></div>
 
 <!-- *******************************************************************************************************************-->
 
@@ -67,25 +79,24 @@
 
     <div id="videos">
             <video id="video1_robot" playsinline autoplay muted></video>
-            <video id="video2_robot" playsinline autoplay></video>
+            <video id="video2_robot" playsinline autoplay ></video>
     </div>
 
-    <!-- <section><input type="checkbox" id="audio"><label for="audio">Include audio (supported in Chrome 49 and above)</label></section> -->
+    <div id="container_text">
+        <button class="btn" id="btnScanAndConnect">Scan and connect</button>
+        <button class="btn" id="btnDisconnect" disabled>Disconnect</button>
 
-    <!-- <div id="buttons">
-        <button id="start">Start</button>
-        <button id="call" disabled>Call</button>
-        <button id="insertRelay" disabled>Insert relay</button>
-        <button id="hangup" disabled>Hang Up</button>
-    </div> -->
-
-    <div id="log">Motion logs</div>
-
-    <div id="div_num_recv_lin"># lin = 0</div>
-    <div id="div_num_recv_ang"># ang = 0</div>
+        <!-- <button class="btn" id="moveBtn" disabled>Muovi robot</button> -->
+        <button class="btn" id="rotateBtn" >Ruota robot</button>
+        <button class="btn" id="rotateAnversaBtn" >Ruota all'anversa</button>
+        <button class="btn" id="forwardBtn" >Avanti</button>
+        <button class="btn" id="backwardBtn" >Indietro</button>
+        <button class="btn" id="stopBtn" >Stop robot</button>
 
 
-    <div id="status"></div>
+        <div id="ip_address"></div>
+        <div id="div_num_recv"># num_recv = 0</div>
+    </div>
 
 </div>
 
@@ -112,6 +123,17 @@
 <script type="text/javascript" src="js/root-ble/lib/root/root.js"></script>
 <script type="text/javascript" src="js/root-ble/main.js"></script>
 <script src="js/robot.js" async></script>
+
+
+<script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+</script>
 
 <!-- Google Analytics stuff... do we need it? -->
 <!-- <script src="../../../js/lib/ga.js"></script> -->

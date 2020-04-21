@@ -35,7 +35,7 @@
   html {
   /* avoid annoying page width change
   when moving from the home page */
-  overflow: visible;
+  overflow: hidden;
   height: 100vh;
   margin: 0;
   padding: 0;
@@ -49,7 +49,7 @@
     height: 100vh;
   }
   
-  button {
+  /*button {
     background-color: #d84a38;
     border: none;
     border-radius: 2px;
@@ -58,7 +58,7 @@
     font-size: 0.8em;
     margin: 0 0 1em 0;
     padding: 0.5em 0.7em 0.6em 0.7em;
-  }
+  }*/
   
 
   /*button:active {
@@ -102,9 +102,9 @@
   h1 {
     border-bottom: 1px solid #ccc;
     font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    margin: 0 0 0.8em 0;
-    padding: 0 0 0.2em 0;
+    font-weight: 250;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
   }
   
   h2 {

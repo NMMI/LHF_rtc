@@ -13,6 +13,7 @@ const fs = require('fs');
 const path = require("path");
 var express = require('express');
 var WebSocketServer = require('websocket').server;
+var count = 0;
 
 function log(text) {
     var time = new Date();
@@ -322,6 +323,18 @@ wsServer.on('request', function(request) {
           case "message":
             msg.name = connect.username;
             msg.text = msg.text.replace(/(<([^>]+)>)/ig, "");
+            break;
+
+          case "joy-message":
+            //console.log("--------------------------------");
+            //console.log("SINGLE JOYSTICK Message in a bottle!");
+            //console.log(msg.value_lin);
+            //console.log(msg.value_ang);
+            //console.log("--------------------------------");
+            sendToOneUser(msg.target, JSON.stringify(msg));
+            count+=1;
+            console.log(count);
+            sendToClients = false;  // We already sent the proper responses
             break;
 
           case "joyL-message":

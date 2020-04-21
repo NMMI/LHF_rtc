@@ -9,6 +9,7 @@
 <html>
 <head>
 
+    <link rel="manifest" href="manifest.json" />
     <meta charset="utf-8">
     <meta name="description" content="WebRTC code samples">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
@@ -26,76 +27,87 @@
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/main_generic.css"/>
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/toggle.css">
+
 
 </head>
 
 <body>
 
-<div id="container">
+<script src="//cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+    <!-- Sidebar -->
+<div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
+  <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
+  <button id="dockingButton">Docking station</button>
+  <!-- Rounded switch -->
+    <div id= "audio">
+        <label class="switch">
+            <input type="checkbox" id="audio"  onchange="switch_function(this)" checked>
+            <span class="slider round"></span>
+        </label>
+    audio</div>
+</div>
 
-    <!-- <h1>Camera Pilota
-    </h1> -->
+<!-- Page Content -->
+<div class="w3-teal">
+  <button id="but_sidebar" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">☰ LHF-connect Pilot</button>
+  <!--div class="w3-container" style = "float: center">
+    <h1>LHF-connect Pilot</h1>
+  </div-->
+</div>
+
+<div id="container">
 
     <div id="videos">
         <video id="video1_pilot" playsinline autoplay muted></video>
-        <video id="video2_pilot" playsinline autoplay></video>
+        <video id="video2_pilot" playsinline autoplay ></video>
     </div>
-    <button id="dockingButton">Docking station</button>
 
-    <!-- <section><input type="checkbox" id="audio"><label for="audio">Include audio (supported in Chrome 49 and above)</label></section> -->
+    <div id="container_text">
+        <div id="div_num_recv"># cmds = 0</div>
+        <div id="ip_address"></div>
+        <div id="single_joy"></div>
+    </div>
 
-    <!-- <div id="buttons">
-        <button id="start">Start</button>
-        <button id="call" disabled>Call</button>
-        <button id="insertRelay" disabled>Insert relay</button>
-        <button id="hangup" disabled>Hang Up</button>
-    </div> -->
-
-    <div id="status"></div>
-
-    <div id="div_num_recv_lin"># lin = 0</div>
-    <div id="div_num_recv_ang"># ang = 0</div>
-
-    <div id="messages">
+    <!--div id="messages">
         <ul id="messages"></ul>
         <form action="">
         <input id="messageText" autocomplete="off" />
         </form>
         <button id="messageBtn">Invia messaggio</button>
-    </div>
+    </div-->
+
 </div>
 
 <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
 <!-- <script src="js/videopipe.js"></script> -->
 
-<div id="ip_address"></div>
 
-<div id="left"></div>
-<div id="right"></div>
 <script src="node_modules/nipplejs/dist/nipplejs.js"></script>
 
 <script>
-    var joystickL = nipplejs.create({
-        zone: document.getElementById('left'),
-        mode: 'static',
-        position: { left: '20%', top: '50%' },
-        color: 'green',
-        size: 200,
-        lockY: true
-    });
-
-    var joystickR = nipplejs.create({
-        zone: document.getElementById('right'),
+    var joystick = nipplejs.create({
+        zone: document.getElementById('single_joy'),
         mode: 'static',
         position: { left: '80%', top: '50%' },
-        color: 'red',
-        size: 200,
-        lockX: true
+        color: 'green',
+        size: 200
     });
-
 
 </script>
 <script src="js/pilot.js" async></script>
+<script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+
 
 <!--script src="test_joystick.js" async></script-->
 
