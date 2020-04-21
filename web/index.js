@@ -419,8 +419,8 @@ wsServer.on('request', function(request) {
             // if it's not; keep trying that until it works.
             while (!isUsernameUnique(msg.name)) {
               console.log("ERROR: username is not unique!");
-              msg.name = origName + appendToMakeUnique;
-              appendToMakeUnique++;
+              // msg.name = origName + appendToMakeUnique;
+              // appendToMakeUnique++;
               nameChanged = true;
             }
   
