@@ -7,7 +7,7 @@
  */
 
 'use strict';
-
+var countIDMsg = 0;
 var myUsername = "ROBOT";
 var targetUsername = "PILOT";
 
@@ -54,10 +54,10 @@ var num_recv_ang = 0;
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-//const SERVER_IP_ = "10.244.75.85";
-const SERVER_IP_ = "10.244.207.185";
+// const SERVER_IP_ = "10.244.75.85";
+// const SERVER_IP_ = "10.244.207.185";
 
-//const SERVER_IP_ = "10.244.86.201";
+const SERVER_IP_ = "10.244.86.201";
 //const SERVER_IP_ = "10.244.107.78";
 
 
@@ -125,7 +125,7 @@ const pipes = [];
 let localStream;
 let remoteStream;
 
-function gotStream(stream) {
+/*function gotStream(stream) {
   console.log('Received local stream');
   video1.srcObject = stream;
   localStream = stream;
@@ -136,7 +136,7 @@ function gotStream(stream) {
   callAuto(); // TODO continue from here
   // we need to return the offer to the index.js script
   // so that it can be sent to the robot.js
-}
+}*/
 
 function gotremoteStream(stream) {
   remoteStream = stream;
@@ -180,7 +180,7 @@ function gotremoteStream(stream) {
 //   insertRelayButton.disabled = true;
 // }
 
-function hangup() {
+/*function hangup() {
   console.log('Ending call');
   while (pipes.length > 0) {
     const pipe = pipes.pop();
@@ -189,19 +189,20 @@ function hangup() {
   // insertRelayButton.disabled = true;
   hangupButton.disabled = true;
   callButton.disabled = false;
-}
+}*/
 
 // execute code before quitting
 window.onbeforeunload = closingCode;
 function closingCode(){
    // do something...
+   closeVideoCall();
    return null;
 }
 
 
 
 
-async function startAuto() {
+/*async function startAuto() {
   console.log('Requesting local stream in automatic mode');
   var success = true;
   // startButton.disabled = true;
@@ -218,9 +219,9 @@ async function startAuto() {
   console.log(`startAuto: ${localStream}`);
   
   return success;
-}
+}*/
 
-function callAuto() {
+/*function callAuto() {
   console.log("Starting call negotiation");
 
   callButton.disabled = true;
@@ -232,7 +233,7 @@ function callAuto() {
 
   // pipes.push(new VideoPipe_pilot(localStream, gotremoteStream));
   invite();
-}
+}*/
 
 // Handle a click on an item in the user list by inviting the clicked
 // user to video chat. Note that we don't actually send a message to
@@ -244,6 +245,7 @@ async function invite() {
   console.log("Starting to prepare an invitation");
   if (pc1) {
     alert("You can't start a call because you already have one open!");
+    console.log("You can't start a call because you already have one open!");
   } else {
     console.log("Inviting user " + targetUsername);
 
@@ -556,9 +558,25 @@ function connect() {
     var timeStr = time.toLocaleTimeString();
 
     switch(msg.type) {
+      case "disconnecting":
+        console.log("Received disconnecting message from: " + msg.name);
+        closeVideoCall();
+        window.location.reload(false); 
+        // handleHangUpMsg(msg);
+        break;
+
+      case "invite":
+        console.log("Received invite message");
+        //invite();
+        break;
+
       case "id":
-        clientID = msg.id;
-        setUsername();
+        console.log(`countDebug = ${countIDMsg}`);
+        countIDMsg++;
+        if(countIDMsg==1) {
+          clientID = msg.id;
+          setUsername();
+        }
         break;
 
       case "username":
@@ -644,6 +662,7 @@ function connect() {
         break;
 
       case "new-ice-candidate": // A new ICE candidate has been received
+        console.log("Robot has received a new-ice-candidate message.");
         handleNewICECandidateMsg(msg);
         break;
 
@@ -687,8 +706,9 @@ function reportError(errMessage) {
 
 async function handleNewICECandidateMsg(msg) {
   var candidate = new RTCIceCandidate(msg.candidate);
-  console.log(msg);
-  console.log("*** Adding received ICE candidate: " + JSON.stringify(candidate));
+  // console.log(msg);
+  // console.log("*** Adding received ICE candidate: " + JSON.stringify(candidate));
+  console.log("*** Robot Adding received ICE candidate ***");
   try {
     await pc1.addIceCandidate(candidate)
   } catch(err) {
@@ -746,7 +766,7 @@ async function handleVideoOfferMsg(msg) {
 
   // If the connection isn't stable yet, wait for it...
 
-  // if (pc1.signalingState != "stable") {
+  //if (pc1.signalingState != "stable") {
   if(0) {
     console.log("  - But the signaling state isn't stable, so triggering rollback");
 
@@ -844,11 +864,12 @@ function closeVideoCall() {
     pc1.onicegatheringstatechange = null;
     pc1.onnotificationneeded = null;
 
-    // Stop all transceivers on the connection
+    // // Stop all transceivers on the connection
 
-    pc1.getTransceivers().forEach(transceiver => {
-      transceiver.stop();
-    });
+    // pc1.getTransceivers().forEach(transceiver => {
+    //   console.log('transceiver.stop() should happen here');
+    //   transceiver.stop();
+    // });
 
     // Stop the webcam preview as well by pausing the <video>
     // element, then stopping each of the getUserMedia() tracks
@@ -870,8 +891,8 @@ function closeVideoCall() {
 
   // Disable the hangup button
 
-  document.getElementById("hangup-button").disabled = true;
-  targetUsername = null;
+  // document.getElementById("hangup-button").disabled = true;
+  // targetUsername = null;
 }
 
 // Handle errors which occur when trying to access the local media

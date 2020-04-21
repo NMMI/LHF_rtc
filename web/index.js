@@ -14,6 +14,9 @@ const path = require("path");
 var express = require('express');
 var WebSocketServer = require('websocket').server;
 var count = 0;
+// var appendToMakeUnique = 0;
+
+var lastConnectionRequestUsername = "";
 
 function log(text) {
     var time = new Date();
@@ -60,6 +63,7 @@ app_pilot.use(express.static(__dirname));
 
 app_pilot.get("/", function(req, res) {
     console.log("Pilot is connecting");
+    lastConnectionRequestUsername = "PILOT";
     res.sendFile(path.resolve(__dirname,'pilot.html'));
 
 });
@@ -85,6 +89,7 @@ app_robot.use(express.static(__dirname));
 
 app_robot.get("/", function(req, res) {
     console.log("Robot is connecting");
+    lastConnectionRequestUsername = "ROBOT";
     res.sendFile(path.resolve(__dirname,'robot.html'));
 });
 
@@ -253,6 +258,7 @@ function sendUserListToAll() {
 // return true. Otherwise, returns false. We want all users to have unique
 // names.
 function isUsernameUnique(name) {
+    console.log("Checking if name " + name + " is unique");
     var isUnique = true;
     var i;
   
@@ -269,6 +275,26 @@ function isUsernameUnique(name) {
 // WebSocket protocol.
 
 wsServer.on('request', function(request) {
+    console.log(`Current users are: ---------------`);
+    var i=0;
+    // var robotConnected = false;
+    // var pilotConnected = false;
+    var alreadyConnectedUsername = "";
+    for (i=0; i<connectionArray.length; i++) {
+      console.log(connectionArray[i].username);
+      if(connectionArray[i].username === "ROBOT") {
+        // robotConnected = true;
+        alreadyConnectedUsername = "ROBOT";
+      }
+      if(connectionArray[i].username === "PILOT") {
+        // pilotConnected = true;
+        alreadyConnectedUsername = "PILOT";
+      }
+    }
+    console.log(`----------------------------------`);
+    console.log('A new connection request arrived from: ' + lastConnectionRequestUsername);
+    console.log(`----------------------------------`);
+
     log("New connection attempt");
     if (!originIsAllowed(request.origin)) {
       request.reject();
@@ -297,6 +323,21 @@ wsServer.on('request', function(request) {
     };
     connection.sendUTF(JSON.stringify(msg));
   
+
+    // Allow invitation
+    if(alreadyConnectedUsername === "PILOT" && lastConnectionRequestUsername === "ROBOT")
+    {
+      console.log("PILOT already connected. ROBOT attempting to connect. Notifying PILOT");
+      var msgInvite = {
+        type: "invite",
+        from: "ROBOT",
+        to: "PILOT"
+      };
+      // connection.sendUTF(JSON.stringify(msgInvite));
+      sendToOneUser(msgInvite.to, JSON.stringify(msgInvite));
+    }
+    //
+
     // Set up a handler for the "message" event received over WebSocket. This
     // is a message sent by a client, and may be text to share with other
     // users, a private message (text or signaling) for one user, or a command
@@ -304,7 +345,8 @@ wsServer.on('request', function(request) {
   
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        log("Received Message: " + message.utf8Data);
+        log("Received message. Edit code in index.js for more details.");
+        //log("Received Message: " + message.utf8Data);
   
         // Process incoming data.
   
@@ -319,6 +361,10 @@ wsServer.on('request', function(request) {
         // by that name.
   
         switch(msg.type) {
+          // Rebound notification of disconnection
+          case "disconnecting":
+            console.log("Received disconnecting message from: " + msg.name);
+            break;
           // Public, textual message
           case "message":
             msg.name = connect.username;
@@ -372,6 +418,7 @@ wsServer.on('request', function(request) {
             // Ensure the name is unique by appending a number to it
             // if it's not; keep trying that until it works.
             while (!isUsernameUnique(msg.name)) {
+              console.log("ERROR: username is not unique!");
               msg.name = origName + appendToMakeUnique;
               appendToMakeUnique++;
               nameChanged = true;
@@ -425,6 +472,7 @@ wsServer.on('request', function(request) {
     // Handle the WebSocket "close" event; this means a user has logged off
     // or has been disconnected.
     connection.on('close', function(reason, description) {
+      console.log("A user has disconnected");
       // First, remove the connection from the list of connections.
       connectionArray = connectionArray.filter(function(el, idx, ar) {
         return el.connected;
@@ -432,7 +480,7 @@ wsServer.on('request', function(request) {
   
       // Now send the updated user list. Again, please don't do this in a
       // real application. Your users won't like you very much.
-      sendUserListToAll();
+      // sendUserListToAll();
   
       // Build and output log output for close information.
   

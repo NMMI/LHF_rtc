@@ -40,9 +40,9 @@ var num_sent_ang = 0;
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
-//const SERVER_IP_ = "10.244.75.85";
-const SERVER_IP_ = "10.244.207.185";
-//const SERVER_IP_ = "10.244.86.201";
+// const SERVER_IP_ = "10.244.75.85";
+// const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.86.201";
 //const SERVER_IP_ = "10.244.107.78";
 
 function startupCode()
@@ -105,7 +105,7 @@ const pipes = [];
 let localStream;
 let remoteStream;
 
-function gotStream(stream) {
+/*function gotStream(stream) {
   console.log('Received local stream');
   video1.srcObject = stream;
   localStream = stream;
@@ -116,7 +116,7 @@ function gotStream(stream) {
   callAuto(); // TODO continue from here
   // we need to return the offer to the index.js script
   // so that it can be sent to the robot.js
-}
+}*/
 
 function gotremoteStream(stream) {
   remoteStream = stream;
@@ -160,7 +160,7 @@ function gotremoteStream(stream) {
 //   insertRelayButton.disabled = true;
 // }
 
-function hangup() {
+/*function hangup() {
   console.log('Ending call');
   while (pipes.length > 0) {
     const pipe = pipes.pop();
@@ -169,19 +169,20 @@ function hangup() {
   // insertRelayButton.disabled = true;
   hangupButton.disabled = true;
   callButton.disabled = false;
-}
+}*/
 
 // execute code before quitting
 window.onbeforeunload = closingCode;
 function closingCode(){
    // do something...
+   closeVideoCall();
    return null;
 }
 
 
 
 
-async function startAuto() {
+/*async function startAuto() {
   console.log('Requesting local stream in automatic mode');
   var success = true;
   // startButton.disabled = true;
@@ -198,21 +199,21 @@ async function startAuto() {
   console.log(`startAuto: ${localStream}`);
   
   return success;
-}
+}*/
 
-function callAuto() {
+/*function callAuto() {
   console.log("Starting call negotiation");
 
   callButton.disabled = true;
   // insertRelayButton.disabled = false;
-  hangupButton.disabled = false;
+  // hangupButton.disabled = false;
 
   console.log('localStream');
   console.log(localStream);
 
   // pipes.push(new VideoPipe_pilot(localStream, gotremoteStream));
   invite();
-}
+}*/
 
 // Handle a click on an item in the user list by inviting the clicked
 // user to video chat. Note that we don't actually send a message to
@@ -224,6 +225,7 @@ async function invite() {
   console.log("Starting to prepare an invitation");
   if (pc1) {
     alert("You can't start a call because you already have one open!");
+    console.log("You can't start a call because you already have one open!");
   } else {
     console.log("Inviting user " + targetUsername);
 
@@ -521,6 +523,13 @@ function connect() {
     var timeStr = time.toLocaleTimeString();
 
     switch(msg.type) {
+      case "invite":
+        console.log("Received invite message from " + msg.from);
+        // closeVideoCall();
+        // invite();
+        window.location.reload(false); 
+        break;
+
       case "id":
         clientID = msg.id;
         setUsername();
@@ -559,6 +568,7 @@ function connect() {
         break;
 
       case "new-ice-candidate": // A new ICE candidate has been received
+        console.log("Pilot has received a new-ice-candidate message");
         handleNewICECandidateMsg(msg);
         break;
 
@@ -602,8 +612,9 @@ function reportError(errMessage) {
 
 async function handleNewICECandidateMsg(msg) {
   var candidate = new RTCIceCandidate(msg.candidate);
-  console.log(msg);
-  console.log("*** Adding received ICE candidate: " + JSON.stringify(candidate));
+  // console.log(msg);
+  // console.log("*** Adding received ICE candidate: " + JSON.stringify(candidate));
+  console.log("*** Robot Adding received ICE candidate ***");
   try {
     await pc1.addIceCandidate(candidate)
   } catch(err) {
@@ -761,9 +772,9 @@ function closeVideoCall() {
 
     // Stop all transceivers on the connection
 
-    pc1.getTransceivers().forEach(transceiver_ => {
-      transceiver_.stop();
-    });
+    // pc1.getTransceivers().forEach(transceiver_ => {
+    //   transceiver_.stop();
+    // });
 
     // Stop the webcam preview as well by pausing the <video>
     // element, then stopping each of the getUserMedia() tracks
@@ -781,12 +792,21 @@ function closeVideoCall() {
     pc1.close();
     pc1 = null;
     webcamStream = null;
+
+    // Send notification of disconnection
+    var messageDisconnect = { 
+      name: myUsername,
+      target: targetUsername,
+      type: "disconnecting",
+    };
+    sendToServer(messageDisconnect);
+    
   }
 
   // Disable the hangup button
 
-  document.getElementById("hangup-button").disabled = true;
-  targetUsername = null;
+  // document.getElementById("hangup-button").disabled = true;
+  // targetUsername = null;
 }
 
 // Handle errors which occur when trying to access the local media
