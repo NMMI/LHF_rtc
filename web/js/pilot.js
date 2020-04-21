@@ -41,9 +41,9 @@ var num_sent_ang = 0;
 window.onload = startupCode;
 
 //const SERVER_IP_ = "10.244.75.85";
-//const SERVER_IP_ = "10.244.207.185";
+const SERVER_IP_ = "10.244.207.185";
 //const SERVER_IP_ = "10.244.86.201";
-const SERVER_IP_ = "10.244.107.78";
+//const SERVER_IP_ = "10.244.107.78";
 
 function startupCode()
 {
@@ -940,6 +940,7 @@ joystick.on('start', function(evt, data) {
                                           }
                                           else if(data.distance < 40 && flag_send_zero)
                                           {
+                                            direction_old = "NULL";
                                             vel_lin = 0;
                                             vel_ang = 0;
                                             sendMessageJoy(vel_lin, vel_ang);
@@ -959,6 +960,7 @@ joystick.on('start', function(evt, data) {
                                           }*/
                                         }).on('end', function(evt, data) {
                                           if(flag_send_zero){
+                                            direction_old = "NULL";
                                             vel_lin = 0;
                                             vel_ang = 0;
                                             sendMessageJoy(vel_lin, vel_ang);
