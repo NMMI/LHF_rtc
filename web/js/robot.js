@@ -27,7 +27,7 @@ var mediaConstraints = {
 };
 
 var mediaConstraints_env = {
-  audio: false,            // We want an audio track
+  audio: true,            // We want an audio track
   video: true
 };
 
@@ -63,7 +63,7 @@ window.onload = startupCode;
 // const SERVER_IP_ = "10.101.7.46"; // LOCAL
 const SERVER_IP_ = window.location.hostname; // auto
 
-function startupCode()
+async function startupCode()
 {
   console.log("Start me up");
 
@@ -80,7 +80,8 @@ function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
-  
+  console.log('Sleep');
+  await sleep(2000);  //waiting for connection
   // start video stuff
   // startAuto();
   // invite();
@@ -986,3 +987,7 @@ function switch_function(el) {
       video2.muted = true;
     } 
   }
+
+  function sleep(ms) {
+return new Promise(resolve => setTimeout(resolve, ms));
+}

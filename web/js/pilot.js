@@ -17,7 +17,7 @@ var myHostname = "";
 
 var mediaConstraints = {
   audio: true,            // We want an audio track
-  video: true
+  video: false
   /*video: {
     aspectRatio: {
       ideal: 1.333333     // 3:2 aspect is preferred
@@ -48,7 +48,7 @@ window.onload = startupCode;
 // const SERVER_IP_ = "10.101.7.46"; // LOCAL
 const SERVER_IP_ = window.location.hostname; // auto
 
-function startupCode()
+async function startupCode()
 {
   console.log("Start me up");
 
@@ -65,6 +65,8 @@ function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
+  console.log('Sleep');
+  await sleep(2000); //waiting for connection
   
   // start video stuff
   // startAuto();
@@ -1029,3 +1031,47 @@ function switch_function(el) {
     } 
 
   }
+
+async function switch_function_video(el_vide) {    
+  if (el_vide.checked) {
+    mediaConstraints = {
+      audio: true,
+      video: true
+    };
+    //console.log("checked")
+  }
+  else
+  {
+    mediaConstraints = {
+      audio: true,
+      video: false
+    };
+    //console.log("no checked")
+
+  }
+
+
+ /* try {
+      webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+      video1.srcObject = webcamStream;
+      } catch(err) {
+        handleGetUserMediaError(err);
+        return;
+      }
+
+
+  try {
+      webcamStream.getTracks().forEach(
+        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
+      );
+    } catch(err) {
+      handleGetUserMediaError(err);
+    }
+  */
+}
+
+      
+
+function sleep(ms) {
+return new Promise(resolve => setTimeout(resolve, ms));
+}
