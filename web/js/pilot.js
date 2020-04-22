@@ -45,7 +45,8 @@ window.onload = startupCode;
 // const SERVER_IP_ = "10.244.86.201";
 // test mercoledi
 // const SERVER_IP_ = "10.244.107.78"; // REMOTE
-const SERVER_IP_ = "10.101.7.46"; // LOCAL
+// const SERVER_IP_ = "10.101.7.46"; // LOCAL
+const SERVER_IP_ = window.location.hostname; // auto
 
 function startupCode()
 {
