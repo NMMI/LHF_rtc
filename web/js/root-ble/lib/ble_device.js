@@ -1,7 +1,8 @@
 function BleDevice(identifier, services) {
     this.init(identifier, services);
 }
-
+var device_ = null;
+var flag = false;
 Object.assign(BleDevice.prototype, {
 
     init: function (identifier, services) {
@@ -22,16 +23,29 @@ Object.assign(BleDevice.prototype, {
 
     scanAndConnect: function () {
       var self = this;
-      navigator.bluetooth.requestDevice(this.scanOptions)
-      .then(function (device) {
-        self.device = device;
+      if(!flag)
+      {
+        flag = true;
+        navigator.bluetooth.requestDevice(this.scanOptions)
+        .then(function (device) {
+          device_ = device;
+          self.device = device;
+          self.device.addEventListener('gattserverdisconnected', self.disconnectedBleDeviceHandler.bind(self));
+          self.log('BLE device selected', self.device);
+          self.connectBleDevice();
+        })
+        .catch(function(error) {
+          self.log('BLE device not selected', error);
+        })
+      }
+      else
+      {
+        self.device = device_;
         self.device.addEventListener('gattserverdisconnected', self.disconnectedBleDeviceHandler.bind(self));
         self.log('BLE device selected', self.device);
         self.connectBleDevice();
-      })
-      .catch(function(error) {
-        self.log('BLE device not selected', error);
-      })
+      }
+      
     },
 
     connectBleDevice: function () {

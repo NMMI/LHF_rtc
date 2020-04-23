@@ -45,6 +45,8 @@ var num_recv = 0;
 var num_recv_lin = 0;
 var num_recv_ang = 0;
 
+var scan_conn_flag_ = true;
+
 // function log(text) {
 //   var time = new Date();
 
@@ -597,6 +599,11 @@ function connect() {
         dock_robot();
         break;
 
+      case "scan-conn-message":
+            scan_conn_flag_ = msg.value;
+            conn_discon();
+            break;
+
       case "joy-message":
             console.log("--------------------------------");
             console.log("SINGLE JOYSTICK Message in a bottle!");
@@ -987,6 +994,11 @@ function switch_function(el) {
       video2.muted = true;
     } 
   }
+
+function conn_discon(){
+  if(scan_conn_flag_) bleDevice.scanAndConnect();
+  else bleDevice.disconnect();
+}
 
   function sleep(ms) {
 return new Promise(resolve => setTimeout(resolve, ms));

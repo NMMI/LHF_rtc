@@ -44,9 +44,16 @@
 
         <!-- Sidebar -->
     <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
-      <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
+      <button id="close" onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
 
       <!-- Rounded switch -->
+      <div id= "scan_conn">
+            <label class="switch">
+                <input type="checkbox" id="scan_conn" onchange="switch_function_scan_conn(this)">
+                <span class="slider round"></span>
+            </label>
+        scan&conn</div>
+
         <div id= "audio">
             <label class="switch">
                 <input type="checkbox" id="audio" onchange="switch_function(this)" checked>
@@ -76,15 +83,9 @@
 
 
 <div id="container">
-
-    <div id="videos">
-            <video id="video1_robot" playsinline autoplay muted></video>
-            <video id="video2_robot" playsinline autoplay ></video>
-    </div>
-
     <div id="container_text">
-        <button class="btn" id="btnScanAndConnect">Scan and connect</button>
-        <button class="btn" id="btnDisconnect" disabled>Disconnect</button>
+        <!--button class="btn" id="btnScanAndConnect">Scan and connect</button>
+        <button class="btn" id="btnDisconnect" disabled>Disconnect</button-->
 
         <!-- <button class="btn" id="moveBtn" disabled>Muovi robot</button> -->
         <button class="btn" id="rotateBtn" >Ruota robot</button>
@@ -97,6 +98,14 @@
         <div id="ip_address"></div>
         <div id="div_num_recv"># num_recv = 0</div>
     </div>
+
+
+    <div id="videos">
+            <video id="video1_robot" playsinline autoplay muted></video>
+            <video id="video2_robot" playsinline autoplay ></video>
+    </div>
+
+
 
 </div>
 

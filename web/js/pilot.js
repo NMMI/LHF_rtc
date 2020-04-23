@@ -1021,6 +1021,32 @@ function sendDockingMessage()
   sendToServer(message_dock_robot);
 }
 
+function switch_scan_conn(el_scan) {
+  if (el_scan.checked) {
+
+    var message_scan_conn = { 
+      name: myUsername,
+      target: targetUsername,
+      type: "scan-conn-message",
+      value: true
+    };
+    sendToServer(message_scan_conn);
+    //bleDevice.scanAndConnect();
+  }
+  else
+  {
+    var message_scan_conn = { 
+      name: myUsername,
+      target: targetUsername,
+      type: "scan-conn-message",
+      value: false
+    };
+    sendToServer(message_scan_conn);
+    //bleDevice.disconnect();
+  }
+
+}
+
 function switch_function(el) {    
     if (el.checked) {
       video2.muted = false;
@@ -1049,8 +1075,6 @@ async function switch_function_video(el_vide) {
     //console.log("no checked")
 
   }
-
-
  /* try {
       webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
       video1.srcObject = webcamStream;

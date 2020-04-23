@@ -371,6 +371,11 @@ wsServer.on('request', function(request) {
             msg.text = msg.text.replace(/(<([^>]+)>)/ig, "");
             break;
 
+          case "scan-conn-message":
+            sendToOneUser(msg.target, JSON.stringify(msg));
+            sendToClients = false;  // We already sent the proper responses
+            break;
+
           case "joy-message":
             //console.log("--------------------------------");
             //console.log("SINGLE JOYSTICK Message in a bottle!");
