@@ -66,8 +66,8 @@ async function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
-  console.log('Sleep');
-  await sleep(10000); //waiting for connection
+  // console.log('Sleep');
+  // await sleep(10000); //waiting for connection
   
   // start video stuff
   // startAuto();
