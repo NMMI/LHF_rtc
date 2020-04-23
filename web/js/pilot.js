@@ -66,12 +66,12 @@ async function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
-  // console.log('Sleep');
-  // await sleep(10000); //waiting for connection
+  console.log('Sleep');
+  await sleep(10000); //waiting for connection
   
   // start video stuff
   // startAuto();
-  // invite();
+  invite();
 
   console.log("Started!");
 
@@ -557,11 +557,11 @@ function connect() {
 
       case "userlist":      // Received an updated user list
         handleUserlistMsg(msg);
-        if(first_connection)
-        {
-          invite();
-          first_connection = false;
-        }
+        // if(first_connection)
+        // {
+        //   invite();
+        //   first_connection = false;
+        // }
         
         break;
 
