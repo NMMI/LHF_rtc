@@ -31,6 +31,7 @@ var transceiver = null;         // RTCRtpTransceiver
 var num_sent = 0;
 var num_sent_ang = 0;
 
+var first_connection = true;
 // function log(text) {
 //   var time = new Date();
 
@@ -65,12 +66,12 @@ async function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
-  console.log('Sleep');
-  await sleep(4000); //waiting for connection
+  // console.log('Sleep');
+  // await sleep(10000); //waiting for connection
   
   // start video stuff
   // startAuto();
-  invite();
+  // invite();
 
   console.log("Started!");
 
@@ -556,6 +557,12 @@ function connect() {
 
       case "userlist":      // Received an updated user list
         handleUserlistMsg(msg);
+        if(first_connection)
+        {
+          invite();
+          first_connection = false;
+        }
+        
         break;
 
       // Signaling messages: these messages are used to trade WebRTC
