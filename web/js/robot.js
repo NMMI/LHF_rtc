@@ -64,6 +64,7 @@ window.onload = startupCode;
 // const SERVER_IP_ = "10.244.107.78"; // REMOTE
 // const SERVER_IP_ = "10.101.7.46"; // LOCAL
 const SERVER_IP_ = window.location.hostname; // auto
+var instructions_text = "";
 
 async function startupCode()
 {
@@ -563,6 +564,10 @@ function connect() {
     var timeStr = time.toLocaleTimeString();
 
     switch(msg.type) {
+      case "instructions_text":
+        document.getElementById('ip_address').innerHTML = msg.text;
+        break;
+
       case "disconnecting":
         console.log("Received disconnecting message from: " + msg.name);
         closeVideoCall();
