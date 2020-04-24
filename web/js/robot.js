@@ -14,7 +14,7 @@ var targetUsername = "PILOT";
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: true,            // We want an audio track
+  audio: false,            // We want an audio track
   video: {
     facingMode: 'user'
   }
@@ -46,6 +46,23 @@ var num_recv_lin = 0;
 var num_recv_ang = 0;
 
 var scan_conn_flag_ = true;
+window.addEventListener('new_roomba', callback_first_blue);
+function callback_first_blue(e){
+  console.log(device_);
+  var message_new_roomba = { 
+      name: myUsername,
+      target: targetUsername,
+      type: "new_roomba-message",
+      device: JSON.stringify(device_)
+  };
+  
+  
+
+  console.log("sono in callback_first_blue message_new_roomba: ");
+  console.log(message_new_roomba.device);
+  console.log(fixed);
+  sendToServer(message_new_roomba);
+}
 
 // function log(text) {
 //   var time = new Date();
@@ -67,6 +84,9 @@ const SERVER_IP_ = window.location.hostname; // auto
 
 async function startupCode()
 {
+
+
+
   console.log("Start me up");
 
   document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
@@ -457,7 +477,7 @@ function handleTrackEvent(event) {
   console.log("*** Track event");
   video2.srcObject = event.streams[0];
   // document.getElementById("video2").srcObject = event.streams[0];
-  document.getElementById("hangup").disabled = false;
+  //document.getElementById("hangup").disabled = false;
 }
 
 // signaling stuff
@@ -565,8 +585,10 @@ function connect() {
     switch(msg.type) {
       case "disconnecting":
         console.log("Received disconnecting message from: " + msg.name);
-        closeVideoCall();
-        window.location.reload(false); 
+        closeVideoCall().then( startupCode());
+
+
+        //window.location.reload(false); 
         // handleHangUpMsg(msg);
         break;
 
@@ -602,6 +624,11 @@ function connect() {
       case "scan-conn-message":
             scan_conn_flag_ = msg.value;
             conn_discon();
+            break;
+
+      case "roomba-device":
+            device_ = msg.device;
+            console.log("received msg robotttttttttttttttttttt");
             break;
 
       case "joy-message":
@@ -997,7 +1024,11 @@ function switch_function(el) {
 
 function conn_discon(){
   if(scan_conn_flag_) bleDevice.scanAndConnect();
-  else bleDevice.disconnect();
+  else 
+    {
+      console.log("sono qui!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      bleDevice.disconnect();
+    }
 }
 
   function sleep(ms) {

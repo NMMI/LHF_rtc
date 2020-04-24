@@ -1,8 +1,10 @@
 function BleDevice(identifier, services) {
     this.init(identifier, services);
 }
+
 var device_ = null;
-var flag = false;
+var new_device_= null;
+
 Object.assign(BleDevice.prototype, {
 
     init: function (identifier, services) {
@@ -23,16 +25,23 @@ Object.assign(BleDevice.prototype, {
 
     scanAndConnect: function () {
       var self = this;
-      if(!flag)
+      if(!device_)
       {
-        flag = true;
         navigator.bluetooth.requestDevice(this.scanOptions)
         .then(function (device) {
           device_ = device;
+          console.log("window.device_");
+          console.log(device_);
+          console.log(device);
+          localStorage.device_ = device_;
+          console.log("cacheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+          //console.log(localStorage.getItem("lastname"));
           self.device = device;
           self.device.addEventListener('gattserverdisconnected', self.disconnectedBleDeviceHandler.bind(self));
           self.log('BLE device selected', self.device);
           self.connectBleDevice();
+          var event_blue = new Event('new_roomba');
+          window.dispatchEvent(event_blue);
         })
         .catch(function(error) {
           self.log('BLE device not selected', error);
@@ -40,7 +49,10 @@ Object.assign(BleDevice.prototype, {
       }
       else
       {
-        self.device = device_;
+        new_device_ = localStorage.device_;
+        console.log("cacheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee222222222222222222222222222");
+        console.log(new_device_);
+        self.device = new_device_;
         self.device.addEventListener('gattserverdisconnected', self.disconnectedBleDeviceHandler.bind(self));
         self.log('BLE device selected', self.device);
         self.connectBleDevice();

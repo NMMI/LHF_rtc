@@ -45,6 +45,7 @@ function switch_function_scan_conn(el_scan) {
     else
     {
       bleDevice.disconnect();
+      //console.log("sono qui!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     } 
   }
 

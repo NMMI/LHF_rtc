@@ -17,6 +17,7 @@ var count = 0;
 // var appendToMakeUnique = 0;
 
 var lastConnectionRequestUsername = "";
+var robot_device = "";
 
 function log(text) {
     var time = new Date();
@@ -337,7 +338,16 @@ wsServer.on('request', function(request) {
       sendToOneUser(msgInvite.to, JSON.stringify(msgInvite));
     }
     //
-
+    if(lastConnectionRequestUsername === "ROBOT" && robot_device)
+    {
+      var message_roomba_device = {
+        type: "roomba-device",
+        device: JSON.stringify(robot_device)
+      };
+      //sleep(2000);
+      sendToOneUser("ROBOT", JSON.stringify(message_roomba_device));
+      console.log("sending device to robotttttttttttttttttttttttttttttttttttttttt");
+    }
     // Set up a handler for the "message" event received over WebSocket. This
     // is a message sent by a client, and may be text to share with other
     // users, a private message (text or signaling) for one user, or a command
@@ -374,6 +384,13 @@ wsServer.on('request', function(request) {
           case "scan-conn-message":
             sendToOneUser(msg.target, JSON.stringify(msg));
             sendToClients = false;  // We already sent the proper responses
+            break;
+
+          case "new_roomba-message":
+            robot_device = msg.device;
+            sendToClients = false;
+            console.log("new roomba messageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:");
+            console.log(msg.device.name);
             break;
 
           case "joy-message":
@@ -514,3 +531,7 @@ function sendToOneUser(target, msgString) {
       }
     }
   }
+
+  function sleep(ms) {
+return new Promise(resolve => setTimeout(resolve, ms));
+}

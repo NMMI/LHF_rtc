@@ -16,8 +16,8 @@ var targetUsername = "ROBOT";
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: true,            // We want an audio track
-  video: false
+  audio: false,            // We want an audio track
+  video: true
   /*video: {
     aspectRatio: {
       ideal: 1.333333     // 3:2 aspect is preferred
