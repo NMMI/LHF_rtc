@@ -17,7 +17,7 @@ var myHostname = "";
 
 var mediaConstraints = {
   audio: true,            // We want an audio track
-  video: false
+  video: true
   /*video: {
     aspectRatio: {
       ideal: 1.333333     // 3:2 aspect is preferred
@@ -179,9 +179,10 @@ function gotremoteStream(stream) {
 
 // execute code before quitting
 window.onbeforeunload = closingCode;
-function closingCode(){
+async function closingCode(){
    // do something...
    closeVideoCall();
+   sleep(3000);
    return null;
 }
 
@@ -663,6 +664,9 @@ async function createPeerConnection() {
 // stream, then create and send an answer to the caller.
 
 async function handleVideoOfferMsg(msg) {
+  console.log("___________________________");
+  console.log("__HANDLING VIDEO OFFER_____");
+  console.log("___________________________");
   targetUsername = msg.name;
 
   // If we're not already connected, create an RTCPeerConnection
@@ -727,6 +731,9 @@ async function handleVideoOfferMsg(msg) {
 
   await pc1.setLocalDescription(await pc1.createAnswer());
 
+  console.log("___________________________");
+  console.log("__SENDING VIDEO ANSWER_____");
+  console.log("___________________________");
   sendToServer({
     name: myUsername,
     target: targetUsername,

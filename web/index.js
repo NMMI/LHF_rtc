@@ -369,6 +369,10 @@ wsServer.on('request', function(request) {
         // by that name.
   
         switch(msg.type) {
+          case "video-answer":
+            console.log("Video answer message :::::::::::::");
+            console.log(msg);
+            break;
           // Rebound notification of disconnection
           case "disconnecting":
             console.log("Received disconnecting message from: " + msg.name);
