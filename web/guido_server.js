@@ -70,7 +70,7 @@ function () {
   app_pilot.get("/", function(req, res) {
       console.log("Pilot is connecting");
       lastConnectionRequestUsername = "PILOT";
-      res.sendFile(path.resolve(__dirname,'web/pilot.html'));
+      res.sendFile(path.resolve(__dirname,'pilot.html'));
   
   });
   
@@ -96,7 +96,7 @@ function () {
   app_robot.get("/", function(req, res) {
       console.log("Robot is connecting");
       lastConnectionRequestUsername = "ROBOT";
-      res.sendFile(path.resolve(__dirname,'web/robot.html'));
+      res.sendFile(path.resolve(__dirname,'robot.html'));
   });
   
   const port_robot = 4444;
