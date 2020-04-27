@@ -10,6 +10,11 @@
 var countIDMsg = 0;
 var myUsername = "ROBOT";
 var targetUsername = "PILOT";
+var pc1; // pilotPC
+var webcamStream = null;        // MediaStream from webcam
+var transceiver = null;         // RTCRtpTransceiver
+
+var scan_conn_flag_ = true;
 
 var myHostname = "";
 
@@ -17,22 +22,8 @@ var mediaConstraints = {
   audio: true,            // We want an audio track
   video: {
     facingMode: 'user'
-  }
-  // video: {
-  //   aspectRatio: {
-  //     ideal: 1.333333     // 3:2 aspect is preferred
-  //   }
-  // }
-  
+  }  
 };
-
-var mediaConstraints_env = {
-  audio: true,            // We want an audio track
-  video: true
-};
-
-var webcamStream = null;        // MediaStream from webcam
-var transceiver = null;         // RTCRtpTransceiver
 
 var vel_Left = 0.0;
 var vel_Right = 0.0;
@@ -44,14 +35,6 @@ const R_wheel = 1.0;
 var num_recv = 0;
 var num_recv_lin = 0;
 var num_recv_ang = 0;
-
-var scan_conn_flag_ = true;
-
-// function log(text) {
-//   var time = new Date();
-
-//   console.log("[PILOT " + time.toLocaleTimeString() + "] " + text);
-// }
 
 // fully automated connection via Node.js server
 window.onload = startupCode;
@@ -83,30 +66,15 @@ async function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
-  console.log('Sleep');
-  await sleep(2000);  //waiting for connection
-  // start video stuff
-  // startAuto();
-  // invite();
-
   console.log("Started!");
-
 }
 
 
-const video1 = document.querySelector('video#video1_robot'); // TODO fix
+const video1 = document.querySelector('video#video1_robot');
 const video2 = document.querySelector('video#video2_robot');
-
-// const statusDiv = document.querySelector('div#status');
 
 const audioCheckbox = document.querySelector('input#audio');
 const div_num_recv = document.getElementById('div_num_recv');
-//const div_num_recv_lin = document.getElementById('div_num_recv_lin');
-//const div_num_recv_ang = document.getElementById('div_num_recv_ang');
-// const startButton = document.querySelector('button#start');
-// const callButton = document.querySelector('button#call');
-// const insertRelayButton = document.querySelector('button#insertRelay');
-// const hangupButton = document.querySelector('button#hangup');
 
 const rotateBtn = document.getElementById('rotateBtn');
 const rotateAnversaBtn = document.getElementById('rotateAnversaBtn');
@@ -120,170 +88,12 @@ forwardBtn.onclick = forwardRobot;
 backwardBtn.onclick = backwardRobot;
 stopBtn.onclick = stopRobot;
 
-
-// startButton.onclick = start;
-// callButton.onclick = call;
-// insertRelayButton.onclick = insertRelay;
-// hangupButton.onclick = hangup;
-
-const pipes = [];
-
-let localStream;
-let remoteStream;
-
-/*function gotStream(stream) {
-  console.log('Received local stream');
-  video1.srcObject = stream;
-  localStream = stream;
-  callButton.disabled = false;
-
-  console.log(`gotStream: ${localStream}`);
-
-  callAuto(); // TODO continue from here
-  // we need to return the offer to the index.js script
-  // so that it can be sent to the robot.js
-}*/
-
-function gotremoteStream(stream) {
-  remoteStream = stream;
-  video2.srcObject = stream;
-  console.log('Received remote stream');
-  console.log(`${pipes.length} element(s) in chain`);
-  // statusDiv.textContent = `${pipes.length} element(s) in chain`;
-  // insertRelayButton.disabled = false;
-}
-
-// function start() {
-//   console.log('Requesting local stream');
-//   startButton.disabled = true;
-//   const options = audioCheckbox.checked ? {audio: true, video: true} : {audio: false, video: true};
-//   navigator.mediaDevices
-//       .getUserMedia(options)
-//       .then(gotStream)
-//       .catch(function(e) {
-//         alert('getUserMedia() failed');
-//         console.log('getUserMedia() error: ', e);
-//       });
-  
-// }
-
-// function call() {
-//   callButton.disabled = true;
-//   insertRelayButton.disabled = false;
-//   hangupButton.disabled = false;
-//   console.log('Starting call');
-//   console.log(localStream);
-//   console.log('localStream');
-//   console.log('gotremoteStream');
-//   console.log(gotremoteStream);
-//   pipes.push(new VideoPipe(localStream, gotremoteStream));
-// }
-
-// function insertRelay() {
-//   console.log('remoteStream');
-//   console.log(remoteStream);
-//   pipes.push(new VideoPipe(remoteStream, gotremoteStream));
-//   insertRelayButton.disabled = true;
-// }
-
-/*function hangup() {
-  console.log('Ending call');
-  while (pipes.length > 0) {
-    const pipe = pipes.pop();
-    pipe.close();
-  }
-  // insertRelayButton.disabled = true;
-  hangupButton.disabled = true;
-  callButton.disabled = false;
-}*/
-
 // execute code before quitting
 window.onbeforeunload = closingCode;
 function closingCode(){
    // do something...
    closeVideoCall();
    return null;
-}
-
-
-
-
-/*async function startAuto() {
-  console.log('Requesting local stream in automatic mode');
-  var success = true;
-  // startButton.disabled = true;
-  const options_media = {audio: true, video: true};
-  await navigator.mediaDevices
-      .getUserMedia(options_media)
-      .then(gotStream)
-      .catch(function(e) {
-        // alert('getUserMedia() failed');
-        console.log('getUserMedia() error: ', e);
-        success = false;
-      });
-
-  console.log(`startAuto: ${localStream}`);
-  
-  return success;
-}*/
-
-/*function callAuto() {
-  console.log("Starting call negotiation");
-
-  callButton.disabled = true;
-  // insertRelayButton.disabled = false;
-  hangupButton.disabled = false;
-
-  console.log('localStream');
-  console.log(localStream);
-
-  // pipes.push(new VideoPipe_pilot(localStream, gotremoteStream));
-  invite();
-}*/
-
-// Handle a click on an item in the user list by inviting the clicked
-// user to video chat. Note that we don't actually send a message to
-// the callee here -- calling RTCPeerConnection.addTrack() issues
-// a |notificationneeded| event, so we'll let our handler for that
-// make the offer.
-
-async function invite() {
-  console.log("Starting to prepare an invitation");
-  if (pc1) {
-    alert("You can't start a call because you already have one open!");
-    console.log("You can't start a call because you already have one open!");
-  } else {
-    console.log("Inviting user " + targetUsername);
-
-    // Call createPeerConnection() to create the RTCPeerConnection.
-    // When this returns, pc1 is our RTCPeerConnection
-    // and webcamStream is a stream coming from the camera. They are
-    // not linked together in any way yet.
-
-    console.log("Setting up connection to invite user: " + targetUsername);
-    createPeerConnection();
-
-    // Get access to the webcam stream and attach it to the
-    // "preview" box (id "local_video").
-
-    try {
-      webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-      video1.srcObject = webcamStream;
-    } catch(err) {
-      handleGetUserMediaError(err);
-      return;
-    }
-
-    // Add the tracks from the stream to the RTCPeerConnection
-
-    try {
-      webcamStream.getTracks().forEach(
-        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
-      );
-    } catch(err) {
-      handleGetUserMediaError(err);
-    }
-  }
 }
 
 /*
@@ -324,7 +134,6 @@ function successHandler(context) {
 function noAction() {
 }
 
-var pc1; // pilotPC
 
 
 // ICE STUFF
@@ -411,6 +220,9 @@ async function handleNegotiationNeededEvent() {
 
   try {
     console.log("---> Creating offer");
+    console.log("___________________________");
+    console.log("____ CREATING OFFER _______");
+    console.log("___________________________");
     const offer = await pc1.createOffer();
 
     // If the connection hasn't yet achieved the "stable" state,
@@ -876,6 +688,19 @@ function closeVideoCall() {
   if (pc1) {
     console.log("--> Closing the peer connection");
 
+    // // Stop all transceivers on the connection
+    
+    pc1.getTransceivers().forEach(transceiver => {
+      console.log('transceiver.stop() should happen here');
+      console.log(transceiver);
+      try {
+      transceiver.stop();
+      } catch (e)
+      {
+        console.log(e);
+      }
+    });
+
     // Disconnect all our event listeners; we don't want stray events
     // to interfere with the hangup while it's ongoing.
 
@@ -886,12 +711,10 @@ function closeVideoCall() {
     pc1.onicegatheringstatechange = null;
     pc1.onnotificationneeded = null;
 
-    // // Stop all transceivers on the connection
 
-    // pc1.getTransceivers().forEach(transceiver => {
-    //   console.log('transceiver.stop() should happen here');
-    //   transceiver.stop();
-    // });
+    // if (pc1) {
+    //   pc1.getTransceivers().getTracks().forEach(function (track) { track.stop(); });
+    // }
 
     // Stop the webcam preview as well by pausing the <video>
     // element, then stopping each of the getUserMedia() tracks

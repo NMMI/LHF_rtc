@@ -1,16 +1,6 @@
 module.exports = {
     server:
-function () {
-    // #### Put index.js content here
-  
-  // const server = require('server');
-  
-  // const {get, post}  = server.router;
-  
-  // server({port : 3000}, [
-  //     get('/', ctx => 'Ciao')
-  // ])
-  
+function () {  
   'use strict';
   
   const https = require('https');
@@ -18,8 +8,8 @@ function () {
   const path = require("path");
   var express = require('express');
   var WebSocketServer = require('websocket').server;
+
   var count = 0;
-  // var appendToMakeUnique = 0;
   var instructions_text ="";
   
   var lastConnectionRequestUsername = "";
@@ -36,31 +26,6 @@ function () {
       key: fs.readFileSync(path.resolve(__dirname,'security/server.key')),
       cert: fs.readFileSync(path.resolve(__dirname,'security/server.crt'))
   }
-  
-  // roomba bluetooth setup page
-  /*var app_roomba = express();
-  
-  app_roomba.use(express.static(__dirname));
-  
-  app_roomba.get("/", function(req, res) {
-      console.log("Pilot is connecting");
-      res.sendFile(path.resolve(__dirname,'root-ble.html'));
-  
-  });
-  
-  var bodyParser_roomba = require("body-parser");
-  app_roomba.use(bodyParser_roomba.urlencoded({ extended: false }));
-  
-  app_roomba.post("/", function(req,res){
-      console.log("Received POST request from Pilot");
-  });
-  
-  const port_roomba = 5555;
-  
-  var server_roomba = https.createServer(options,app_roomba);
-  console.log("Pilot page listening on port: ", port_roomba);
-  
-  server_roomba.listen(port_roomba);*/
   
   // pilot setup page
   var app_pilot = express();
@@ -379,8 +344,8 @@ function () {
     
           switch(msg.type) {
             case "video-answer":
-              console.log("Video answer message :::::::::::::");
-              console.log(msg);
+              console.log("Video answer message received from " + msg.name + " for " + msg.target + " :::::::::::::");
+              // console.log(msg);
               break;
             // Rebound notification of disconnection
             case "disconnecting":
@@ -409,24 +374,6 @@ function () {
               sendToClients = false;  // We already sent the proper responses
               break;
   
-            case "joyL-message":
-              //console.log("--------------------------------");
-              //console.log("JOYSTICK LEFT Message in a bottle!");
-              //console.log("A message from " + msg.name + " for " + msg.target);
-              //console.log(msg.value);
-              //console.log("--------------------------------");
-              sendToOneUser(msg.target, msg.value);
-            break;
-      
-            case "joyR-message":
-              //console.log("--------------------------------");
-              //console.log("JOYSTICK RIGHT Message in a bottle!");
-              //console.log("A message from " + msg.name + " for " + msg.target);
-              //console.log(msg.value);
-              //console.log("--------------------------------");
-              sendToOneUser(msg.target, msg.value);
-            break;
-  
             case "text-message":
               console.log("--------------------------------");
               console.log("Message in a bottle!");
@@ -434,6 +381,7 @@ function () {
               console.log(msg.text);
               console.log("--------------------------------");
               sendToOneUser(msg.target, msg.text);
+              sendToClients = false;
               break;
   
             // Username change
@@ -480,8 +428,6 @@ function () {
                 };
                 sendToOneUser("ROBOT",JSON.stringify(instructions_text_msg));
               }
-              
-  
               break;
           }
     
