@@ -391,7 +391,7 @@ function connect() {
         //Negotiation = 0;
         // closeVideoCall();
         // window.location.reload(false); 
-        handleHangUpMsg(msg);
+        if(msg.name === "PILOT") handleHangUpMsg(msg);
         break;
 
       case "invite":
