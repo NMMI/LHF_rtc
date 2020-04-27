@@ -32,6 +32,8 @@ var num_sent = 0;
 var num_sent_ang = 0;
 
 var first_connection = true;
+var robot_connected = false;
+var pilot_connected = false;
 // function log(text) {
 //   var time = new Date();
 
@@ -67,11 +69,11 @@ async function startupCode()
   console.log('Connecting to signaling server');
   connect();
   console.log('Sleep');
-  await sleep(5000); //waiting for connection
+  //await sleep(5000); //waiting for connection
   
   // start video stuff
   // startAuto();
-  invite();
+  //invite();
 
   console.log("Started!");
 
@@ -558,6 +560,21 @@ function connect() {
 
       case "userlist":      // Received an updated user list
         handleUserlistMsg(msg);
+        try {
+              for (var i=0; i<msg.users.length; i++) {
+              if(msg.users[i] === "ROBOT") robot_connected = true;
+              else if(msg.users[i] === "PILOT") pilot_connected = true;
+              }
+            } catch(err_array) {
+              console.log(err_array);
+            }
+        
+        if(robot_connected && pilot_connected) 
+          {
+            console.log("SEND INVITE()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            invite();
+          }
+        
         // if(first_connection)
         // {
         //   invite();

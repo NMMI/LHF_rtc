@@ -203,19 +203,19 @@ function handleSignalingStateChangeEvent(event) {
 
 // Called by the WebRTC layer to let us know when it's time to
 // begin, resume, or restart ICE negotiation.
-var Negotiation = 0;
+//var Negotiation = 0;
 async function handleNegotiationNeededEvent() {
   console.log("___________________________");
   console.log("__ NEGOTIATION NEEDED _____");
   console.log("___________________________");
-  if(Negotiation === 0 )
+  /*if(Negotiation === 0 )
   {
       Negotiation++;
   }
   else
   {
       return;
-  }
+  }*/
   console.log("*** Negotiation needed");
 
   try {
@@ -276,7 +276,7 @@ function handleTrackEvent(event) {
   console.log("*** Track event");
   video2.srcObject = event.streams[0];
   // document.getElementById("video2").srcObject = event.streams[0];
-  document.getElementById("hangup").disabled = false;
+  //document.getElementById("hangup").disabled = false;
 }
 
 // signaling stuff
@@ -388,10 +388,10 @@ function connect() {
 
       case "disconnecting":
         console.log("Received disconnecting message from: " + msg.name);
-        Negotiation = 0;
+        //Negotiation = 0;
         // closeVideoCall();
         // window.location.reload(false); 
-        // handleHangUpMsg(msg);
+        handleHangUpMsg(msg);
         break;
 
       case "invite":
@@ -600,8 +600,8 @@ async function handleVideoOfferMsg(msg) {
 
   // If the connection isn't stable yet, wait for it...
 
-  //if (pc1.signalingState != "stable") {
-  if(0) {
+  if (pc1.signalingState != "stable") {
+  //if(0) {
     console.log("  - But the signaling state isn't stable, so triggering rollback");
 
     // Set the local and remove descriptions for rollback; don't proceed
@@ -668,7 +668,7 @@ async function handleVideoAnswerMsg(msg) {
 // has hung up the call or otherwise disconnected.
 
 function handleHangUpMsg(msg) {
-  log("*** Received hang up notification from other peer");
+  console.log("*** Received hang up notification from other peer");
 
   closeVideoCall();
 }
