@@ -36,7 +36,7 @@ function gotStream(stream) {
   console.log('Received local stream');
   video1.srcObject = stream;
   localStream = stream;
-  callButton.disabled = false;
+  // callButton.disabled = false;
 }
 
 function gotremoteStream(stream) {
@@ -45,12 +45,12 @@ function gotremoteStream(stream) {
   console.log('Received remote stream');
   console.log(`${pipes.length} element(s) in chain`);
   statusDiv.textContent = `${pipes.length} element(s) in chain`;
-  insertRelayButton.disabled = false;
+  // insertRelayButton.disabled = false;
 }
 
 function start() {
   console.log('Requesting local stream');
-  startButton.disabled = true;
+  // startButton.disabled = true;
   const options = audioCheckbox.checked ? {audio: true, video: true} : {audio: false, video: true};
   navigator.mediaDevices
       .getUserMedia(options)
@@ -62,9 +62,9 @@ function start() {
 }
 
 function call() {
-  callButton.disabled = true;
-  insertRelayButton.disabled = false;
-  hangupButton.disabled = false;
+  // callButton.disabled = true;
+  // insertRelayButton.disabled = false;
+  // hangupButton.disabled = false;
   console.log('Starting call');
   console.log(localStream);
   console.log('localStream');
@@ -77,7 +77,7 @@ function insertRelay() {
   console.log('remoteStream');
   console.log(remoteStream);
   pipes.push(new VideoPipe(remoteStream, gotremoteStream));
-  insertRelayButton.disabled = true;
+  // insertRelayButton.disabled = true;
 }
 
 function hangup() {
@@ -86,9 +86,9 @@ function hangup() {
     const pipe = pipes.pop();
     pipe.close();
   }
-  insertRelayButton.disabled = true;
-  hangupButton.disabled = true;
-  callButton.disabled = false;
+  // insertRelayButton.disabled = true;
+  // hangupButton.disabled = true;
+  // callButton.disabled = false;
 }
 
 // execute code before quitting
