@@ -59,6 +59,7 @@ Object.assign(BleDevice.prototype, {
       .catch(function (error) {
         self.log('BLE device not connected', error);
       })
+      console.log('Connection established with BLE device');
     },
 
     disconnect: function () {
@@ -69,7 +70,7 @@ Object.assign(BleDevice.prototype, {
     },
 
     disconnectedBleDeviceHandler: function () {
-      this.log('BLE device disconnected');
+      this.log('BLE device disconnected in disconnectedBleDeviceHandler');
       this.dispatchEvent({type:'disconnected'});
     },
 
