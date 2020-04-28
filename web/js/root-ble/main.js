@@ -28,9 +28,11 @@ bleDevice.addEventListener('connected', function (event) {
 });
 
 bleDevice.addEventListener('disconnected', function (event) {
+  console.log('event listener disconnected');
   /*btnScanAndConnect.removeAttribute('disabled');
   btnDisconnect.setAttribute('disabled', 'disabled');*/
 });
+
 
 /*var btnScanAndConnect = document.getElementById('btnScanAndConnect')
 var btnDisconnect = document.getElementById('btnDisconnect')
@@ -62,12 +64,12 @@ function rootIsSetup (root) {
 
   // moveButton.disabled = false;
   // draw square example
-  document.getElementById('log').innerHTML += '<br>Connected!';
+  // document.getElementById('log').innerHTML += '<br>Connected!';
 
-  console.log('Muovo 15 cm');
+  // console.log('Muovo 15 cm');
   // window.root.device.motors.driveDistance(150,fatto);
   // root.device.motors.setLeftAndRightMotorSpeed(50,50);
-  console.log('Fine 15 cm');
+  // console.log('Fine 15 cm');
   // runQueue([go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg, go15cm, turn90deg]);
 }
 
@@ -78,7 +80,7 @@ function fatto()
 
 // draw square example
 function runQueue(arr) {
-  document.getElementById('log').innerHTML += '<br>Starting motion command queue!';
+  // document.getElementById('log').innerHTML += '<br>Starting motion command queue!';
   var fnc = arr.shift();
   var next = function () { runQueue(arr); };
   if (arr.length<=0) {
@@ -89,15 +91,15 @@ function runQueue(arr) {
 
 var go15cm = function (next) {
   console.log('Begin of go15cm');
-  document.getElementById('log').innerHTML += '<br>Trying 15 cm forward!';
+  // document.getElementById('log').innerHTML += '<br>Trying 15 cm forward!';
   window.root.device.motors.driveDistance(150, next);
   // window.root.device.motors.driveDistance(150, next, my_robot);
-  document.getElementById('log').innerHTML += '<br>Should have moved 15 cm forward!';
+  // document.getElementById('log').innerHTML += '<br>Should have moved 15 cm forward!';
   console.log('End of go15cm');
 }
 var turn90deg = function (next) {
   console.log('Begin of turn90deg');
-  document.getElementById('log').innerHTML += '<br>Tring 90 deg rotation!';
+  // document.getElementById('log').innerHTML += '<br>Tring 90 deg rotation!';
   window.root.device.motors.rotateAngel(900, next);
   console.log('End of turn90deg');
 }
