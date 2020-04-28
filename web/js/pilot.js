@@ -184,7 +184,7 @@ window.onbeforeunload = closingCode;
 async function closingCode(){
    // do something...
    closeVideoCall();
-   sleep(3000);
+   //sleep(3000);
    return null;
 }
 
