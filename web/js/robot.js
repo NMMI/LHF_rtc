@@ -91,6 +91,13 @@ stopBtn.onclick = stopRobot;
 // execute code before quitting
 window.onbeforeunload = closingCode;
 function closingCode(){
+  console.log("Closing onbeforeunload");
+  // sleep(5000);
+  console.log(bleDevice);
+  if(bleDevice) {
+    bleDevice.disconnect();
+    console.log("Disconnecting BLE device");
+  }
    // do something...
    closeVideoCall();
    return null;
@@ -392,6 +399,14 @@ function connect() {
         // closeVideoCall();
         // window.location.reload(false); 
         if(msg.name === "PILOT") handleHangUpMsg(msg);
+        if(msg.name === "PILOT" || msg.name === "ROBOT") {
+          emergency_brake();
+        }
+        if(bleDevice)
+        {
+          console.log('Disconnecting BLE device');
+          bleDevice.disconnect();
+        }
         break;
 
       case "invite":
@@ -683,6 +698,9 @@ function closeVideoCall() {
 
   console.log("Closing the call");
 
+  console.log(" Stopping the robot");
+  emergency_brake();
+
   // Close the RTCPeerConnection
 
   if (pc1) {
@@ -837,4 +855,18 @@ function conn_discon(){
 
   function sleep(ms) {
 return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function emergency_brake()
+{
+  if(vel_lin != 0 || vel_ang != 0) {
+    console.log('Emergency brake: triggered!');
+    vel_lin = 0;
+    vel_ang = 0;
+    div_num_recv.innerHTML = `# num_recv = PILOT CONNECTION LOST`;
+    compute_vel();
+  }
+  else {
+    console.log('Emergency brake: no need, all good');
+  }
 }
