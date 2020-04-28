@@ -21,7 +21,7 @@ var myHostname = "";
 var mediaConstraints = {
   audio: true,            // We want an audio track
   video: {
-    facingMode: 'user'
+    facingMode: 'environment',
   }  
 };
 
@@ -52,6 +52,16 @@ var instructions_text = "";
 async function startupCode()
 {
   console.log("Start me up");
+await navigator.mediaDevices.enumerateDevices()
+.then(function(devices) {
+  devices.forEach(function(device) {
+    console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+  });
+})
+.catch(function(err) {
+  console.log(err.name + ": " + err.message);
+});
 
   document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
 

@@ -55,11 +55,18 @@
     position: relative;
     top: -1px;
   }
+
+  div#video2_container{
+    height: 93vh; /* or whatever width you want. */
+    display: inline-block;
+    overflow: hidden;
+    float: left;
+  }
   
   video#video2_pilot {
     height: 93vh;
     width: auto;
-    float: left;
+    z-index: 1;
   }
   
   video#video1_pilot {
@@ -67,6 +74,7 @@
     height: 10%;
     width: auto;
     border-radius: 10px;
+    z-index: 2;
   }
 
   video#video2_robot {

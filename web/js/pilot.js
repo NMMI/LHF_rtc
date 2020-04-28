@@ -9,7 +9,6 @@
 'use strict';
 
 
-
 var myUsername = "PILOT";
 var targetUsername = "ROBOT";
 
@@ -80,8 +79,39 @@ async function startupCode()
 }
 
 
-const video1 = document.querySelector('video#video1_pilot');
+
 const video2 = document.querySelector('video#video2_pilot');
+const video1 = document.querySelector('video#video1_pilot');
+
+
+var instance = panzoom(video2, {minZoom: 1,  bounds: true, boundsPadding:1.0});
+
+/*instance.on('panstart', function(e) {
+  console.log('Fired when pan is just started ', e);
+  // Note: e === instance.
+});
+
+instance.on('pan', function(e) {
+  console.log('Fired when the `element` is being panned', e);
+});
+
+instance.on('panend', function(e) {
+  console.log('Fired when pan ended', e);
+});
+
+instance.on('zoom', function(e) {
+  console.log('Fired when `element` is zoomed', e);
+});
+
+instance.on('zoomend', function(e) {
+  console.log('Fired when zoom animation ended', e);
+});
+
+instance.on('transform', function(e) {
+  // This event will be called along with events above.
+  console.log('Fired when any transformation has happened', e);
+});*/
+
 
 // const statusDiv = document.querySelector('div#status');
 
@@ -379,14 +409,14 @@ function handleSignalingStateChangeEvent(event) {
 // begin, resume, or restart ICE negotiation.
 var Negotiation = 0;
 async function handleNegotiationNeededEvent() {
-  if(Negotiation === 0 )
+  /*if(Negotiation === 0 )
   {
       Negotiation++;
   }
   else
   {
       return;
-  }
+  }*/
   console.log("*** Negotiation needed");
 
   try {
