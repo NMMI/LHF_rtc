@@ -379,14 +379,14 @@ function handleSignalingStateChangeEvent(event) {
 // begin, resume, or restart ICE negotiation.
 var Negotiation = 0;
 async function handleNegotiationNeededEvent() {
-  if(Negotiation === 0 )
-  {
-      Negotiation++;
-  }
-  else
-  {
-      return;
-  }
+  // if(Negotiation === 0 )
+  // {
+  //     Negotiation++;
+  // }
+  // else
+  // {
+  //     return;
+  // }
   console.log("*** Negotiation needed");
 
   try {
@@ -613,13 +613,6 @@ function connect() {
         log_error(msg);
     }
 
-    // If there's text to insert into the chat buffer, do so now, then
-    // scroll the chat panel so that the new text is visible.
-
-    if (text.length) {
-      chatBox.innerHTML += text;
-      chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
-    }
   };
 }
 
@@ -776,7 +769,7 @@ async function handleVideoAnswerMsg(msg) {
 // has hung up the call or otherwise disconnected.
 
 function handleHangUpMsg(msg) {
-  log("*** Received hang up notification from other peer");
+  console.log("*** Received hang up notification from other peer");
 
   closeVideoCall();
 }
