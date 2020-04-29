@@ -17,7 +17,7 @@ var myHostname = "";
 
 var mediaConstraints = {
   audio: true,            // We want an audio track
-  video: true
+  video: false
   /*video: {
     aspectRatio: {
       ideal: 1.333333     // 3:2 aspect is preferred
