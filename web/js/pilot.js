@@ -86,7 +86,7 @@ const video2 = document.querySelector('video#video2_pilot');
 // const statusDiv = document.querySelector('div#status');
 
 const audioCheckbox = document.querySelector('input#audio');
-
+const info_UI = document.getElementById('info_UI');
 const div_num_recv = document.getElementById('div_num_recv');
 //const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
@@ -1045,7 +1045,7 @@ function sendDockingMessage()
   sendToServer(message_dock_robot);
 }
 
-function switch_scan_conn(el_scan) {
+async function switch_scan_conn(el_scan) {
   if (el_scan.checked) {
 
     var message_scan_conn = { 
@@ -1056,6 +1056,12 @@ function switch_scan_conn(el_scan) {
     };
     sendToServer(message_scan_conn);
     //bleDevice.scanAndConnect();
+    // Anti Manuel :)
+    el_scan.disabled = true;
+    info_UI.innerHTML = "<br>Wait 5 seconds";
+    await sleep(5000);
+    el_scan.disabled = false;
+    info_UI.innerHTML = "<br>Ready to scan and connect";
   }
   else
   {
@@ -1067,6 +1073,12 @@ function switch_scan_conn(el_scan) {
     };
     sendToServer(message_scan_conn);
     //bleDevice.disconnect();
+    // Anti Manuel :)
+    info_UI.innerHTML = "<br>Wait 5 seconds";
+    el_scan.disabled = true;
+    await sleep(5000);
+    el_scan.disabled = false;
+    info_UI.innerHTML = "<br>Ready to scan and connect";
   }
 
 }

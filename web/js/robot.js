@@ -74,6 +74,7 @@ const video1 = document.querySelector('video#video1_robot');
 const video2 = document.querySelector('video#video2_robot');
 
 const audioCheckbox = document.querySelector('input#audio');
+const connectionCheckbox = document.querySelector('input#scan_conn');
 const div_num_recv = document.getElementById('div_num_recv');
 
 const rotateBtn = document.getElementById('rotateBtn');
@@ -94,7 +95,7 @@ function closingCode(){
   console.log("Closing onbeforeunload");
   // sleep(5000);
   console.log(bleDevice);
-  if(bleDevice) {
+  if(bleDevice.device) {
     bleDevice.disconnect();
     console.log("Disconnecting BLE device");
   }
@@ -402,10 +403,11 @@ function connect() {
         if(msg.name === "PILOT" || msg.name === "ROBOT") {
           emergency_brake();
         }
-        if(bleDevice)
+        if(bleDevice.device)
         {
           console.log('Disconnecting BLE device');
           bleDevice.disconnect();
+          connectionCheckbox.checked = false;
         }
         break;
 
@@ -441,6 +443,7 @@ function connect() {
       case "scan-conn-message":
             scan_conn_flag_ = msg.value;
             conn_discon();
+            connectionCheckbox.checked = scan_conn_flag_;
             break;
 
       case "joy-message":
@@ -798,7 +801,7 @@ function compute_vel() {
   if(vel_Right < -200) { vel_Right = -200; }
   if(vel_Right > 200) {vel_Right = 200;}
   console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
-  if(window.root != null)
+  if(window.root != null && bleDevice.device != null)
   {
       window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
   }
@@ -850,7 +853,12 @@ function switch_function(el) {
 
 function conn_discon(){
   if(scan_conn_flag_) bleDevice.scanAndConnect();
-  else bleDevice.disconnect();
+  else {
+    if(bleDevice.device) {
+      console.log('Disconnecting BLE device from robot side');
+      bleDevice.disconnect();
+    }
+  }
 }
 
   function sleep(ms) {

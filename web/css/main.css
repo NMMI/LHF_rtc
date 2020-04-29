@@ -31,6 +31,12 @@
     font-size: 2em;
   }
 
+  div#info_UI{
+    float: left;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2em;
+  }
+
   button#but_sidebar{
     width: 300px;
   }
