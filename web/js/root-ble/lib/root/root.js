@@ -1,6 +1,9 @@
 function Root(bleDevice) {
   this.init(bleDevice);
 }
+var flag_received = true;
+var old_my_payload = null;
+var new_my_payload = null;
 
 Object.assign(Root.prototype, {
 
@@ -84,6 +87,7 @@ Object.assign(Root.prototype, {
 
   fromRobot: function (dataView) {
     this.log('RECEIVED', new Uint8Array(dataView.buffer));
+  
     if (this.crcCheck(dataView)) {
       var key = dataView.getUint16(0);
       // var device = dataView.getUint8(0);
@@ -101,33 +105,99 @@ Object.assign(Root.prototype, {
         responseCallback(payload);
       }
     }
+
+    var my_command = dataView.getUint8(1);
+    var my_device = dataView.getUint8(0);
+    if(my_command == 4)
+    {
+      if(!equal(new_my_payload, old_my_payload))
+      {
+        flag_received = false;
+        var self = this;
+        var message = new Uint8Array(20);
+        var id = this.getInc();
+        message.set([my_device, my_command, id], 0);
+        if (new_my_payload!=null) {
+          message.set(new_my_payload, 3);
+          old_my_payload = new Uint8Array(16);
+          old_my_payload.set(new_my_payload,0);
+        }
+        var checksum = crc8(message.slice(0,19), true);
+        message.set([checksum], 19);
+
+        var dataView = new DataView(message.buffer);
+
+        this.log('SENT by fromROBOT', new Uint8Array(dataView.buffer));
+        this.tx.writeValue(message.buffer);
+      }
+      else
+      {
+        flag_received = true;
+      }
+    }  
   },
 
   toRobot: function (device, command, payload, responseCallback, timeout) {
-    var self = this;
-    var message = new Uint8Array(20);
-    var id = this.getInc();
-    message.set([device, command, id], 0);
-    if (payload!=null) {
-      message.set(payload, 3);
-    }
-    var checksum = crc8(message.slice(0,19), true);
-    message.set([checksum], 19);
+    new_my_payload = new Uint8Array(16);
+    new_my_payload.set(payload,0);
+    if(command == 4)
+    {
+      if(flag_received)
+      {
+        var self = this;
+        var message = new Uint8Array(20);
+        var id = this.getInc();
+        message.set([device, command, id], 0);
+        if (payload!=null) {
+          message.set(payload, 3);
+          old_my_payload = new Uint8Array(16);
+          old_my_payload.set(payload,0);
+        }
+        var checksum = crc8(message.slice(0,19), true);
+        message.set([checksum], 19);
 
-    var dataView = new DataView(message.buffer);
-    if (responseCallback) {
-      var key = dataView.getUint16(0);
-      this.pending[key] = {
-        id: id,
-        responseCallback: responseCallback,
-        timeout: !timeout?null:setTimeout(function () {
-          self.timeoutRobot(key);
-        }, (timeout?timeout:500)),
-      };
+        var dataView = new DataView(message.buffer);
+        if (responseCallback) {
+          var key = dataView.getUint16(0);
+          this.pending[key] = {
+            id: id,
+            responseCallback: responseCallback,
+            timeout: !timeout?null:setTimeout(function () {
+              self.timeoutRobot(key);
+            }, (timeout?timeout:500)),
+          };
+        }
+        this.log('SENT', new Uint8Array(dataView.buffer));
+        this.tx.writeValue(message.buffer);
+        flag_received = false;
+      }
     }
+    else{
+      var self = this;
+      var message = new Uint8Array(20);
+      var id = this.getInc();
+      message.set([device, command, id], 0);
+      if (payload!=null) {
+        message.set(payload, 3);
+      }
+      var checksum = crc8(message.slice(0,19), true);
+      message.set([checksum], 19);
 
-    this.log('SENT', new Uint8Array(dataView.buffer));
-    this.tx.writeValue(message.buffer);
+      var dataView = new DataView(message.buffer);
+      if (responseCallback) {
+        var key = dataView.getUint16(0);
+        this.pending[key] = {
+          id: id,
+          responseCallback: responseCallback,
+          timeout: !timeout?null:setTimeout(function () {
+            self.timeoutRobot(key);
+          }, (timeout?timeout:500)),
+        };
+      }
+      this.log('SENT', new Uint8Array(dataView.buffer));
+      this.tx.writeValue(message.buffer);
+    }
+    
   },
 
   listenForRobotEvent: function (device, command, responseCallback) {
@@ -170,3 +240,15 @@ Root.services = [
   bleProfile['root'].service['DeviceInformation'].UUID,
   bleProfile['root'].service['UART'].UUID
 ];
+
+function equal (buf1, buf2)
+{
+    if (buf1.byteLength != buf2.byteLength) return false;
+    var dv1 = new Uint8Array(buf1);
+    var dv2 = new Uint8Array(buf2);
+    for (var i = 0 ; i != buf1.byteLength ; i++)
+    {
+        if (dv1[i] != dv2[i]) return false;
+    }
+    return true;
+}
