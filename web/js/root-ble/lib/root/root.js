@@ -108,7 +108,7 @@ Object.assign(Root.prototype, {
 
     var my_command = dataView.getUint8(1);
     var my_device = dataView.getUint8(0);
-    if(my_command == 4)
+    if( my_device == 1 && my_command == 4)
     {
       if(!equal(new_my_payload, old_my_payload))
       {
@@ -134,7 +134,8 @@ Object.assign(Root.prototype, {
       {
         flag_received = true;
       }
-    }  
+    }
+    else flag_received = true;
   },
 
   toRobot: function (device, command, payload, responseCallback, timeout) {
