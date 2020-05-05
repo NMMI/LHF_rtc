@@ -94,6 +94,7 @@ const div_num_recv = document.getElementById('div_num_recv');
 //const messageText = document.querySelector('input#messageText');
 
 const dockingButton = document.getElementById('dockingButton');
+const stopdockingButton = document.getElementById('stopdockingButton');
 
 // const startButton = document.querySelector('button#start');
 // const callButton = document.querySelector('button#call');
@@ -102,6 +103,7 @@ const dockingButton = document.getElementById('dockingButton');
 
 //messageButton.onclick = sendMessageButton;
 dockingButton.onclick = sendDockingMessage;
+stopdockingButton.onclick = stopDockingMessage;
 
 // startButton.onclick = start;
 // callButton.onclick = call;
@@ -1044,6 +1046,20 @@ function sendDockingMessage()
   };
   sendToServer(message_dock_robot);
 }
+
+function stopDockingMessage()
+{
+  var message_joy = { 
+    name: myUsername,
+    target: targetUsername,
+    type: "joy-message",
+    value_lin: parseInt(0,10),
+    value_ang: parseInt(0,10)
+  };
+  sendToServer(message_joy);
+}
+
+
 
 async function switch_scan_conn(el_scan) {
   if (el_scan.checked) {

@@ -43,10 +43,12 @@ btnDisconnect.addEventListener('pointerup', disconnect)*/
 function switch_function_scan_conn(el_scan) {    
     if (el_scan.checked) {
       bleDevice.scanAndConnect();
+      enable_cmd = true;
     }
     else
     {
       bleDevice.disconnect();
+      enable_cmd = false;
     } 
   }
 

@@ -4,6 +4,8 @@ function Root(bleDevice) {
 var flag_received = true;
 var old_my_payload = null;
 var new_my_payload = null;
+var last_device_sent = null;
+var last_command_sent = null;
 
 Object.assign(Root.prototype, {
 
@@ -108,7 +110,7 @@ Object.assign(Root.prototype, {
 
     var my_command = dataView.getUint8(1);
     var my_device = dataView.getUint8(0);
-    if( my_device == 1 && my_command == 4)
+    if( my_device == 1 && my_command == 4 && last_device_sent == 1 && last_command_sent == 4)
     {
       if(!equal(new_my_payload, old_my_payload))
       {
@@ -129,22 +131,49 @@ Object.assign(Root.prototype, {
 
         this.log('SENT by fromROBOT', new Uint8Array(dataView.buffer));
         this.tx.writeValue(message.buffer);
+        last_device_sent = my_device;
+        last_command_sent = my_command;
       }
       else
       {
         flag_received = true;
       }
     }
+    else if(last_command_sent == 14)
+    {
+      //this.log('SONO QUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+      //flag_received = false;
+      var message_note = new Uint8Array(20);
+      var id = this.getInc();
+      message_note.set([5, 0, id], 0);
+      last_device_sent = 5;
+      last_command_sent = 0;
+      var dataViewNote = new DataView((new Uint8Array(6)).buffer);
+      dataViewNote.setUint32(0, 261);
+      dataViewNote.setUint16(4, 400);
+      var payload_note = new Uint8Array(dataViewNote.buffer);
+      message_note.set(payload_note, 3);
+      var checksum = crc8(message_note.slice(0,19), true);
+      message_note.set([checksum], 19);
+      this.tx.writeValue(message_note.buffer);
+      var dataView = new DataView(message_note.buffer);
+      this.log('SENT by fromROBOT noteeeeee', new Uint8Array(dataView.buffer));
+    }
     else flag_received = true;
   },
 
   toRobot: function (device, command, payload, responseCallback, timeout) {
-    new_my_payload = new Uint8Array(16);
-    new_my_payload.set(payload,0);
+    if (payload!=null)
+    {
+      new_my_payload = new Uint8Array(16);
+      new_my_payload.set(payload,0);
+    }
     if(command == 4)
     {
+      this.log('sono in if command == 4');
       if(flag_received)
       {
+        this.log('sono in if flag RECEIVED');
         var self = this;
         var message = new Uint8Array(20);
         var id = this.getInc();
@@ -173,7 +202,8 @@ Object.assign(Root.prototype, {
         flag_received = false;
       }
     }
-    else{
+    else
+    {
       var self = this;
       var message = new Uint8Array(20);
       var id = this.getInc();
@@ -197,7 +227,11 @@ Object.assign(Root.prototype, {
       }
       this.log('SENT', new Uint8Array(dataView.buffer));
       this.tx.writeValue(message.buffer);
+
     }
+
+    last_device_sent = device;
+    last_command_sent = command;
     
   },
 

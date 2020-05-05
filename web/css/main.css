@@ -19,6 +19,17 @@
     margin: 0 0 1em 0;
     padding: 0.5em 0.7em 0.6em 0.7em;
   }
+
+  button#stopdockingButton{
+    background-color: white;
+    border: none;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5em;
+    margin: 0 0 1em 0;
+    padding: 0.5em 0.7em 0.6em 0.7em;
+  }
+
   div#audio{
     float: left;
     font-family: 'Roboto', sans-serif;
@@ -30,6 +41,13 @@
     font-family: 'Roboto', sans-serif;
     font-size: 2em;
   }
+  
+  div#battery{
+    float: left;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2em;
+  }
+  
 
   div#info_UI{
     float: left;

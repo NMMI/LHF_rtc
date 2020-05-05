@@ -21,7 +21,8 @@ var myHostname = "";
 var mediaConstraints = {
   audio: true,            // We want an audio track
   video: {
-    facingMode: 'user'
+    //deviceid: '770440a36e180f77c45f20f7857f32f76d4f6bd1191869957d084c2f83f04'
+    facingMode: 'environment'
   }  
 };
 
@@ -35,6 +36,7 @@ const R_wheel = 1.0;
 var num_recv = 0;
 var num_recv_lin = 0;
 var num_recv_ang = 0;
+var enable_cmd = false;
 
 // fully automated connection via Node.js server
 window.onload = startupCode;
@@ -51,6 +53,16 @@ var instructions_text = "";
 
 async function startupCode()
 {
+  await navigator.mediaDevices.enumerateDevices()
+  .then(function(devices) {
+    devices.forEach(function(device) {
+      console.log(device.kind + ": " + device.label +
+                  " id = " + device.deviceId);
+    });
+  })
+  .catch(function(err) {
+    console.log(err.name + ": " + err.message);
+  });
   console.log("Start me up");
 
   document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
@@ -791,25 +803,30 @@ function handleGetUserMediaError(e) {
 }
 
 function compute_vel() {
- 
-  vel_Right = ((2 * vel_lin) + (vel_ang * W_wheel)) / (2 * R_wheel);
-  vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
-  /*console.log(Math.round(vel_Left));
-  console.log(Math.round(vel_Right));*/
-  if(vel_Left < -200) { vel_Left = -200; }
-  if(vel_Left > 200) {vel_Left = 200;}
-  if(vel_Right < -200) { vel_Right = -200; }
-  if(vel_Right > 200) {vel_Right = 200;}
-  console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
-  if(window.root != null && bleDevice.device != null)
-  {
-      window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
-  }
-  else
+ if(enable_cmd)
+ {
+    vel_Right = ((2 * vel_lin) + (vel_ang * W_wheel)) / (2 * R_wheel);
+    vel_Left = ((2 * vel_lin) - (vel_ang * W_wheel)) / (2 * R_wheel);
+    /*console.log(Math.round(vel_Left));
+    console.log(Math.round(vel_Right));*/
+    if(vel_Left < -200) { vel_Left = -200; }
+    if(vel_Left > 200) {vel_Left = 200;}
+    if(vel_Right < -200) { vel_Right = -200; }
+    if(vel_Right > 200) {vel_Right = 200;}
+    console.warn(`Math.round(vel_Left): ${Math.round(vel_Left)} Math.round(vel_Right): ${Math.round(vel_Right)}`);
+    if(window.root != null && bleDevice.device != null)
+    {
+        window.root.device.motors.setLeftAndRightMotorSpeed(Math.round(vel_Left), Math.round(vel_Right));
+    }
+    else
+    {
+      console.log('Robot vehicle not connected');
+    }
+ } 
+ else
   {
     console.log('Robot vehicle not connected');
   }
-  
 }
 
 function rotateAnversaRobot() {
@@ -852,13 +869,25 @@ function switch_function(el) {
   }
 
 function conn_discon(){
-  if(scan_conn_flag_) bleDevice.scanAndConnect();
+  if(scan_conn_flag_) 
+    {
+      bleDevice.scanAndConnect();
+      enable_cmd = true;
+    }
   else {
     if(bleDevice.device) {
       console.log('Disconnecting BLE device from robot side');
       bleDevice.disconnect();
+      enable_cmd = false;
     }
   }
+}
+
+function switch_battery(el_battery) { 
+
+  if (el_battery.checked) {
+      window.root.device.motors.setLeftAndRightMotorSpeed(-20, -20);
+    }
 }
 
   function sleep(ms) {
