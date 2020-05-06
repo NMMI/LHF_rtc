@@ -19,12 +19,12 @@ var scan_conn_flag_ = true;
 var myHostname = "";
 
 var mediaConstraints = {
-  audio: false,            // We want an audio track
-  video: true
-  /*video: {
+  audio: true,            // We want an audio track
+  //video: true
+  video: {
     //deviceid: '770440a36e180f77c45f20f7857f32f76d4f6bd1191869957d084c2f83f04'
     facingMode: 'environment'
-  }  */
+  }
 };
 
 var vel_Left = 0.0;
