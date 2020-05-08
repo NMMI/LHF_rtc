@@ -6,6 +6,8 @@ var old_my_payload = null;
 var new_my_payload = null;
 var last_device_sent = null;
 var last_command_sent = null;
+var mybluetimeout;
+
 
 Object.assign(Root.prototype, {
 
@@ -133,10 +135,12 @@ Object.assign(Root.prototype, {
         this.tx.writeValue(message.buffer);
         last_device_sent = my_device;
         last_command_sent = my_command;
+        bluetimeoutFunc();
       }
       else
       {
         flag_received = true;
+        StopbluetimeoutFunc();
       }
     }
     else if(last_command_sent == 14)
@@ -159,7 +163,10 @@ Object.assign(Root.prototype, {
       var dataView = new DataView(message_note.buffer);
       this.log('SENT by fromROBOT noteeeeee', new Uint8Array(dataView.buffer));
     }
-    else flag_received = true;
+    else{
+      flag_received = true;
+      StopbluetimeoutFunc();
+    }
   },
 
   toRobot: function (device, command, payload, responseCallback, timeout) {
@@ -200,6 +207,7 @@ Object.assign(Root.prototype, {
         this.log('SENT', new Uint8Array(dataView.buffer));
         this.tx.writeValue(message.buffer);
         flag_received = false;
+        bluetimeoutFunc();
       }
     }
     else
@@ -286,4 +294,13 @@ function equal (buf1, buf2)
         if (dv1[i] != dv2[i]) return false;
     }
     return true;
+}
+
+
+function bluetimeoutFunc() {
+  mybluetimeout = setTimeout(function(){flag_received = true }, 3000);
+}
+
+function StopbluetimeoutFunc() {
+  clearTimeout(mybluetimeout);
 }
