@@ -34,6 +34,8 @@ var num_sent_ang = 0;
 var first_connection = true;
 var robot_connected = false;
 var pilot_connected = false;
+var pc1 = null; // pilotPC
+
 // function log(text) {
 //   var time = new Date();
 
@@ -309,7 +311,6 @@ function successHandler(context) {
 function noAction() {
 }
 
-var pc1; // pilotPC
 
 
 // ICE STUFF
@@ -1127,23 +1128,25 @@ async function switch_function_video(el_vide) {
     //console.log("no checked")
 
   }
- /* try {
-      webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-      video1.srcObject = webcamStream;
-      } catch(err) {
-        handleGetUserMediaError(err);
-        return;
-      }
+}
 
+function switch_camera(el_camera) {
+  var cam_num;    
+  if (el_camera.checked) {
+    cam_num = 1;
+  }
+  else
+  {
+    cam_num = 2;
+  }
 
-  try {
-      webcamStream.getTracks().forEach(
-        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
-      );
-    } catch(err) {
-      handleGetUserMediaError(err);
-    }
-  */
+  var message_cam = { 
+      name: myUsername,
+      target: targetUsername,
+      type: "cam_num",
+      value: cam_num
+    };
+  sendToServer(message_cam);
 }
 
       

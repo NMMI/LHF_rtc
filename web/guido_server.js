@@ -373,6 +373,11 @@ function () {
               console.log(count);
               sendToClients = false;  // We already sent the proper responses
               break;
+
+            case "cam_num":
+              sendToOneUser(msg.target, JSON.stringify(msg));
+              sendToClients = false;
+              break;
   
             case "text-message":
               console.log("--------------------------------");

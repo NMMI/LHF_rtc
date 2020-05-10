@@ -10,7 +10,7 @@
 var countIDMsg = 0;
 var myUsername = "ROBOT";
 var targetUsername = "PILOT";
-var pc1; // pilotPC
+var pc1 = null; // pilotPC
 var webcamStream = null;        // MediaStream from webcam
 var transceiver = null;         // RTCRtpTransceiver
 
@@ -19,6 +19,15 @@ var scan_conn_flag_ = true;
 var myHostname = "";
 
 var mediaConstraints = {
+  audio: true,            // We want an audio track
+  //video: true
+  video: {
+    //deviceid: '770440a36e180f77c45f20f7857f32f76d4f6bd1191869957d084c2f83f04'
+    facingMode: 'user'
+  }
+};
+
+var mediaConstraints2 = {
   audio: true,            // We want an audio track
   //video: true
   video: {
@@ -471,6 +480,10 @@ function connect() {
             div_num_recv.innerHTML = `# num_recv = ${num_recv}`;
             compute_vel();
             break;
+
+      case "cam_num":
+              switch_cam(msg.value);
+              break
       
       case "joyL-message":
             console.log("--------------------------------");
@@ -663,12 +676,13 @@ async function handleVideoOfferMsg(msg) {
 
     try {
       webcamStream.getTracks().forEach(
-        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
+        track => transceiver = pc1.addTransceiver(track, {streams: [webcamStream]}, {send: true, receive: true})
       );
     } catch(err) {
       handleGetUserMediaError(err);
     }
   }
+
 
   console.log("---> Creating and sending answer to caller");
 
@@ -884,11 +898,49 @@ function conn_discon(){
   }
 }
 
-function switch_battery(el_battery) { 
+async function switch_cam(cam_numb)
+{
+  webcamStream.getTracks().forEach(track => {
+        track.stop();
+        });
+  switch (cam_numb)
+  {
+    case 1:
+      try {
+        webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+      } catch(err) {
+        handleGetUserMediaError(err);
+        return;
+      }
+      break;
+    case 2:
+      try {
+        webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints2);
+      } catch(err) {
+        handleGetUserMediaError(err);
+        return;
+      }
+      break;
+  }
+  video1.srcObject = webcamStream;
+  try 
+  {
+    webcamStream.getTracks().forEach(
+      track => transceiver.sender.replaceTrack(track)
+    );
+  }
+  catch(err)
+  {
+      handleGetUserMediaError(err);
+  }
+}
+
+
+async function switch_battery(el_battery) { 
 
   if (el_battery.checked) {
-      window.root.device.motors.setLeftAndRightMotorSpeed(-20, -20);
-    }
+
+  }
 }
 
   function sleep(ms) {
