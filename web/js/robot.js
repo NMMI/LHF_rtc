@@ -18,23 +18,8 @@ var scan_conn_flag_ = true;
 
 var myHostname = "";
 
-var mediaConstraints = {
-  audio: true,            // We want an audio track
-  //video: true
-  video: {
-    //deviceid: '770440a36e180f77c45f20f7857f32f76d4f6bd1191869957d084c2f83f04'
-    facingMode: 'user'
-  }
-};
-
-var mediaConstraints2 = {
-  audio: true,            // We want an audio track
-  //video: true
-  video: {
-    //deviceid: '770440a36e180f77c45f20f7857f32f76d4f6bd1191869957d084c2f83f04'
-    facingMode: 'environment'
-  }
-};
+var mediaConstraints;
+var mediaConstraints2;
 
 var vel_Left = 0.0;
 var vel_Right = 0.0;
@@ -63,9 +48,40 @@ var instructions_text = "";
 
 async function startupCode()
 {
+  var count_cam = 0;
   await navigator.mediaDevices.enumerateDevices()
   .then(function(devices) {
     devices.forEach(function(device) {
+      if(device.kind === 'videoinput')
+      { 
+        switch(count_cam)
+        {
+          case 0:
+            mediaConstraints = {
+              audio: true,            // We want an audio track
+              //video: true
+              video: {
+                deviceId: device.deviceId
+
+                //facingMode: 'user'
+              }
+            };
+            console.log(device.deviceId);
+            break;
+          case 1:
+            mediaConstraints2 = {
+              audio: true,            // We want an audio track
+              //video: true
+              video: {
+                deviceId: device.deviceId
+                //facingMode: 'user'
+              }
+            };
+            console.log(device.deviceId);
+            break;
+        }
+        count_cam ++;
+      }
       console.log(device.kind + ": " + device.label +
                   " id = " + device.deviceId);
     });
