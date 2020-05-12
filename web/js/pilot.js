@@ -84,7 +84,7 @@ async function startupCode()
 
 const video1 = document.querySelector('video#video1_pilot');
 const video2 = document.querySelector('video#video2_pilot');
-
+var instance = panzoom(video2, {minZoom: 1, maxZoom: 8,  bounds: true, boundsPadding:1.0});
 // const statusDiv = document.querySelector('div#status');
 
 const audioCheckbox = document.querySelector('input#audio');
@@ -733,7 +733,7 @@ async function handleVideoOfferMsg(msg) {
 
     try {
       webcamStream.getTracks().forEach(
-        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
+        track => transceiver = pc1.addTransceiver(track, {streams: [webcamStream]})
       );
     } catch(err) {
       handleGetUserMediaError(err);

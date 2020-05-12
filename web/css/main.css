@@ -85,11 +85,19 @@
     position: relative;
     top: -1px;
   }
+
+  div#video2_container{
+    height: 93vh; /* or whatever width you want. */
+    display: inline-block;
+    overflow: hidden;
+    float: left;
+  }
   
   video#video2_pilot {
     height: 93vh;
     width: auto;
-    float: left;
+    /*float: left;*/
+    z-index: 1;
   }
   
   video#video1_pilot {
@@ -97,6 +105,7 @@
     height: 10%;
     width: auto;
     border-radius: 10px;
+    z-index: 2;
   }
 
   video#video2_robot {
@@ -111,7 +120,13 @@
     width: auto;
     border-radius: 10px;
   }
-
+  button#reset_zoom{
+    position:absolute;
+    z-index: 2;
+  }
+  div#mySidebar{
+    z-index: 3;
+  }
   /*div#videos {
       display: flex;
       flex-direction: column;
