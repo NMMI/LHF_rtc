@@ -703,12 +703,12 @@ async function handleVideoOfferMsg(msg) {
 
   // If the connection isn't stable yet, wait for it...
 
-  if (pc1.signalingState != "stable") {
+ /* if (pc1.signalingState != "stable") {
     console.log("  - But the signaling state isn't stable, so triggering rollback");
 
     // Set the local and remove descriptions for rollback; don't proceed
     // until both return.
-    /*await Promise.all([
+    await Promise.all([
       pc1.setLocalDescription({type: "rollback"}),
       pc1.setRemoteDescription(desc)
     ]);
