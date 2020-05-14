@@ -563,6 +563,7 @@ function connect() {
 
       case "userlist":      // Received an updated user list
         handleUserlistMsg(msg);
+        console.log(msg);
         try {
               for (var i=0; i<msg.users.length; i++) {
               if(msg.users[i] === "ROBOT") robot_connected = true;
@@ -707,15 +708,15 @@ async function handleVideoOfferMsg(msg) {
 
     // Set the local and remove descriptions for rollback; don't proceed
     // until both return.
-    await Promise.all([
+    /*await Promise.all([
       pc1.setLocalDescription({type: "rollback"}),
       pc1.setRemoteDescription(desc)
     ]);
     return;
-  } else {
+  } else {*/
     console.log ("  - Setting remote description");
     await pc1.setRemoteDescription(desc);
-  }
+  //}
 
   // Get the webcam stream if we don't already have it
 
