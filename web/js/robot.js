@@ -399,9 +399,15 @@ function connect() {
     // document.getElementById("send").disabled = false;
   }
 
+  connection.onclose = function(e) {  
+    console.log('socket closed try again'); 
+
+  };
+
   connection.onerror = function(evt) {
     console.dir(evt);
-  }
+    console.log('error'); 
+  };
 
   connection.onmessage = function(evt) {
     var chatBox = document.querySelector(".chatbox");

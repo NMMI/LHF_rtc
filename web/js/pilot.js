@@ -35,6 +35,7 @@ var first_connection = true;
 var robot_connected = false;
 var pilot_connected = false;
 var pc1 = null; // pilotPC
+var flag_disc_video = true;
 
 // function log(text) {
 //   var time = new Date();
@@ -343,6 +344,7 @@ function handleICEConnectionStateChangeEvent(event) {
     case "closed":
     case "failed":
     case "disconnected":
+      flag_disc_video = true;
       closeVideoCall();
       break;
   }
@@ -503,6 +505,36 @@ function handleUserlistMsg(msg) {
 
 // Open and configure the connection to the WebSocket server.
 var clientID = 0;
+var timeout_server_answer;
+var timeout_server_request;
+var first_timeout = true;
+function callback_timeout1()
+{
+  /*if(first_timeout)
+    {
+      first_timeout = false;
+      //console.log("disconnesssooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+      
+    }*/
+    connection.close();
+    connection = null;
+    
+    console.log("it's closing");
+    clearTimeout(timeout_server_request);
+    clearTimeout(timeout_server_answer);
+    connect();
+    //await connection.close();
+    //alert("server out");
+
+}
+
+function heartbeat() {
+  console.log("heartbeat sent");
+  
+  connection.send(JSON.stringify("heartbeat"));
+  timeout_server_request = setTimeout(heartbeat, 1000);
+  timeout_server_answer = setTimeout(callback_timeout1, 1500);
+}
 
 function connect() {
   var serverUrl;
@@ -517,13 +549,21 @@ function connect() {
 
   connection.onopen = function(evt) {
     console.log("Connection established");
+    heartbeat();
     // document.getElementById("text").disabled = false;
     // document.getElementById("send").disabled = false;
   };
 
+  connection.onclose = function(e) {  
+    console.log('socket closed try again');
+  };
+
   connection.onerror = function(evt) {
     console.dir(evt);
-  }
+    console.log('error');
+    alert("Reload page");
+    window.location.reload();
+  };
 
   connection.onmessage = function(evt) {
     var chatBox = document.querySelector(".chatbox");
@@ -533,6 +573,11 @@ function connect() {
     console.dir(msg);
     var time = new Date(msg.date);
     var timeStr = time.toLocaleTimeString();
+
+    if(msg === "heartbeat")
+    {
+      clearTimeout(timeout_server_answer);
+    }
 
     switch(msg.type) {
       case "invite":
@@ -573,9 +618,10 @@ function connect() {
               console.log(err_array);
             }
         
-        if(robot_connected && pilot_connected) 
+        if(robot_connected && pilot_connected && flag_disc_video) 
           {
             console.log("SEND INVITE()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            flag_disc_video = false;
             invite();
           }
         
@@ -613,12 +659,16 @@ function connect() {
       // Unknown message; output to console for debugging.
 
       default:
-        log_error("Unknown message received:");
-        log_error(msg);
+        //log_error("Unknown message received:");
+        //log_error(msg);
     }
 
   };
+
+  
 }
+
+
 
 // Handles reporting errors. Currently, we just dump stuff to console but
 // in a real-world application, an appropriate (and user-friendly)
