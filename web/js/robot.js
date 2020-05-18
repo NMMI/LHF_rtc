@@ -132,11 +132,11 @@ window.onbeforeunload = closingCode;
 function closingCode(){
   console.log("Closing onbeforeunload");
   // sleep(5000);
-  console.log(bleDevice);
+  /*console.log(bleDevice);
   if(bleDevice.device) {
     bleDevice.disconnect();
     console.log("Disconnecting BLE device");
-  }
+  }*/
    // do something...
    closeVideoCall();
    return null;
