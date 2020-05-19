@@ -46,7 +46,7 @@ function () {
       console.log("Received POST request from Pilot");
   });
   
-  const port_pilot = 3333;
+  const port_pilot = 3334;
   
   var server_pilot = https.createServer(options,app_pilot);
   console.log("Pilot page listening on port: ", port_pilot);
@@ -170,7 +170,7 @@ function () {
     // Spin up the HTTPS server on the port assigned to this sample.
     // This will be turned into a WebSocket port very shortly.
     
-    var port_signal = 1111;
+    var port_signal = 1112;
     webServer.listen(port_signal, function() {
       log(`Server is listening on port ${port_signal}`);
     });
