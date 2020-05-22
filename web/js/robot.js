@@ -33,6 +33,7 @@ var num_recv_lin = 0;
 var num_recv_ang = 0;
 var enable_cmd = false;
 
+
 // fully automated connection via Node.js server
 window.onload = startupCode;
 
@@ -240,6 +241,7 @@ function handleICEGatheringStateChangeEvent(event) {
 
 function handleSignalingStateChangeEvent(event) {
   console.log("*** WebRTC signaling state changed to: " + pc1.signalingState);
+
   switch(pc1.signalingState) {
     case "closed":
       closeVideoCall();
@@ -249,7 +251,7 @@ function handleSignalingStateChangeEvent(event) {
 
 // Called by the WebRTC layer to let us know when it's time to
 // begin, resume, or restart ICE negotiation.
-//var Negotiation = 0;
+var Negotiation = 0;
 async function handleNegotiationNeededEvent() {
   console.log("___________________________");
   console.log("__ NEGOTIATION NEEDED _____");
@@ -262,6 +264,7 @@ async function handleNegotiationNeededEvent() {
   {
       return;
   }*/
+
   console.log("*** Negotiation needed");
 
   try {
@@ -388,7 +391,7 @@ function connect() {
 
   // If this is an HTTPS connection, we have to use a secure WebSocket
   // connection too, so add another "s" to the scheme.
-  serverUrl = scheme + "://" + myHostname + ":1112";
+  serverUrl = scheme + "://" + myHostname + ":1111";
 
   console.log(`Connecting to server: ${serverUrl}`);
   connection = new WebSocket(serverUrl, "json");
@@ -666,7 +669,7 @@ async function handleVideoOfferMsg(msg) {
 
   // If the connection isn't stable yet, wait for it...
 
-  if (pc1.signalingState != "stable") {
+  if (pc1.signalingState != "stable" && pc1.signalingState != "have-local-offer") {
   //if(0) {
     console.log("  - But the signaling state isn't stable, so triggering rollback");
 

@@ -17,7 +17,7 @@ var myHostname = "";
 
 var mediaConstraints = {
   audio: true,            // We want an audio track
-  video: false
+  video: true
   /*video: {
     aspectRatio: {
       ideal: 1.333333     // 3:2 aspect is preferred
@@ -140,49 +140,6 @@ function gotremoteStream(stream) {
   insertRelayButton.disabled = false;
 }
 
-// function start() {
-//   console.log('Requesting local stream');
-//   startButton.disabled = true;
-//   const options = audioCheckbox.checked ? {audio: true, video: true} : {audio: false, video: true};
-//   navigator.mediaDevices
-//       .getUserMedia(options)
-//       .then(gotStream)
-//       .catch(function(e) {
-//         alert('getUserMedia() failed');
-//         console.log('getUserMedia() error: ', e);
-//       });
-  
-// }
-
-// function call() {
-//   callButton.disabled = true;
-//   insertRelayButton.disabled = false;
-//   hangupButton.disabled = false;
-//   console.log('Starting call');
-//   console.log(localStream);
-//   console.log('localStream');
-//   console.log('gotremoteStream');
-//   console.log(gotremoteStream);
-//   pipes.push(new VideoPipe(localStream, gotremoteStream));
-// }
-
-// function insertRelay() {
-//   console.log('remoteStream');
-//   console.log(remoteStream);
-//   pipes.push(new VideoPipe(remoteStream, gotremoteStream));
-//   insertRelayButton.disabled = true;
-// }
-
-/*function hangup() {
-  console.log('Ending call');
-  while (pipes.length > 0) {
-    const pipe = pipes.pop();
-    pipe.close();
-  }
-  // insertRelayButton.disabled = true;
-  hangupButton.disabled = true;
-  callButton.disabled = false;
-}*/
 
 // execute code before quitting
 window.onbeforeunload = closingCode;
@@ -192,42 +149,6 @@ async function closingCode(){
    //sleep(3000);
    return null;
 }
-
-
-
-
-/*async function startAuto() {
-  console.log('Requesting local stream in automatic mode');
-  var success = true;
-  // startButton.disabled = true;
-  const options_media = {audio: true, video: true};
-  await navigator.mediaDevices
-      .getUserMedia(options_media)
-      .then(gotStream)
-      .catch(function(e) {
-        // alert('getUserMedia() failed');
-        console.log('getUserMedia() error: ', e);
-        success = false;
-      });
-
-  console.log(`startAuto: ${localStream}`);
-  
-  return success;
-}*/
-
-/*function callAuto() {
-  console.log("Starting call negotiation");
-
-  callButton.disabled = true;
-  // insertRelayButton.disabled = false;
-  // hangupButton.disabled = false;
-
-  console.log('localStream');
-  console.log(localStream);
-
-  // pipes.push(new VideoPipe_pilot(localStream, gotremoteStream));
-  invite();
-}*/
 
 // Handle a click on an item in the user list by inviting the clicked
 // user to video chat. Note that we don't actually send a message to
@@ -266,35 +187,17 @@ async function invite() {
 
     try {
       webcamStream.getTracks().forEach(
-        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
+        track => transceiver = pc1.addTransceiver(track, {streams: [webcamStream]})
       );
+
+      stop_my_stream(webcamStream, video1);
+
     } catch(err) {
       handleGetUserMediaError(err);
     }
   }
 }
 
-/*
- *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
-//
-// A "videopipe" abstraction on top of WebRTC.
-//
-// The usage of this abstraction:
-// var pipe = new VideoPipe(mediastream, handlerFunction);
-// handlerFunction = function(mediastream) {
-//   do_something
-// }
-// pipe.close();
-//
-// The VideoPipe will set up 2 PeerConnections, connect them to each
-// other, and call HandlerFunction when the stream is available in the
-// second PeerConnection.
-//
 
 function errorHandler(context) {
   return function(error) {
@@ -373,6 +276,7 @@ function handleICEGatheringStateChangeEvent(event) {
 
 function handleSignalingStateChangeEvent(event) {
   console.log("*** WebRTC signaling state changed to: " + pc1.signalingState);
+
   switch(pc1.signalingState) {
     case "closed":
       closeVideoCall();
@@ -384,14 +288,15 @@ function handleSignalingStateChangeEvent(event) {
 // begin, resume, or restart ICE negotiation.
 var Negotiation = 0;
 async function handleNegotiationNeededEvent() {
-  // if(Negotiation === 0 )
-  // {
-  //     Negotiation++;
-  // }
-  // else
-  // {
-  //     return;
-  // }
+   /*if(Negotiation === 0 )
+   {
+     Negotiation++;
+   }
+   else
+   {
+       return;
+   }*/
+
   console.log("*** Negotiation needed");
 
   try {
@@ -529,7 +434,7 @@ function callback_timeout1()
 }
 
 function heartbeat() {
-  console.log("heartbeat sent");
+  //console.log("heartbeat sent");
   
   connection.send(JSON.stringify("heartbeat"));
   timeout_server_request = setTimeout(heartbeat, 1000);
@@ -542,7 +447,7 @@ function connect() {
 
   // If this is an HTTPS connection, we have to use a secure WebSocket
   // connection too, so add another "s" to the scheme.
-  serverUrl = scheme + "://" + myHostname + ":1112";
+  serverUrl = scheme + "://" + myHostname + ":1111";
 
   console.log(`Connecting to server: ${serverUrl}`);
   connection = new WebSocket(serverUrl, "json");
@@ -753,20 +658,23 @@ async function handleVideoOfferMsg(msg) {
 
   // If the connection isn't stable yet, wait for it...
 
- /* if (pc1.signalingState != "stable") {
+ if (pc1.signalingState != "stable" && pc1.signalingState != "have-local-offer") {
+
     console.log("  - But the signaling state isn't stable, so triggering rollback");
 
     // Set the local and remove descriptions for rollback; don't proceed
     // until both return.
+
+
     await Promise.all([
       pc1.setLocalDescription({type: "rollback"}),
       pc1.setRemoteDescription(desc)
     ]);
     return;
-  } else {*/
+  } else {
     console.log ("  - Setting remote description");
     await pc1.setRemoteDescription(desc);
-  //}
+  }
 
   // Get the webcam stream if we don't already have it
 
@@ -784,7 +692,7 @@ async function handleVideoOfferMsg(msg) {
 
     try {
       webcamStream.getTracks().forEach(
-        transceiver = track => pc1.addTransceiver(track, {streams: [webcamStream]})
+        track => transceiver = pc1.addTransceiver(track, {streams: [webcamStream]})
       );
     } catch(err) {
       handleGetUserMediaError(err);
@@ -1204,4 +1112,21 @@ function switch_camera(el_camera) {
 
 function sleep(ms) {
 return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function stop_my_stream(web_stream, local_stream)
+{
+  if(web_stream){
+    web_stream.getTracks().forEach(track => {
+        track.stop();
+        });
+
+  }
+  
+  if (local_stream.srcObject) {
+      local_stream.pause();
+      local_stream.srcObject.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
 }
