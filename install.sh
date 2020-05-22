@@ -8,3 +8,4 @@ npm install -g express-generator # possibly not needed
 npm install express
 npm install websocket
 npm install nipplejs --save # --save might not be needed
+npm install panzoom --save
