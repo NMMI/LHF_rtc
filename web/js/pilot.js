@@ -56,30 +56,27 @@ const SERVER_IP_ = window.location.hostname; // auto
 
 async function startupCode()
 {
-  console.log("Start me up");
+  var password = prompt("Please enter your password", "PASSWORD");
+  if (password == "lhfconnect") {
+    console.log("Start me up");
+    document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
 
-  document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
-
-  // Get our hostname
-  // myHostname =  window.location.hostname;
-  myHostname = SERVER_IP_;
-  if (!myHostname) {
-    myHostname = "localhost";
+    // Get our hostname
+    // myHostname =  window.location.hostname;
+    myHostname = SERVER_IP_;
+    if (!myHostname) {
+      myHostname = "localhost";
+    }
+    console.log("Hostname: " + myHostname);
+    console.log('Connecting to signaling server');
+    connect();
+    console.log('Sleep');
+    console.log("Started!");
   }
-  console.log("Hostname: " + myHostname);
-
-  // starting negotiation
-  console.log('Connecting to signaling server');
-  connect();
-  console.log('Sleep');
-  //await sleep(5000); //waiting for connection
-  
-  // start video stuff
-  // startAuto();
-  //invite();
-
-  console.log("Started!");
-
+  else {
+    alert("ACCESS DENIED");
+    window.location.reload();
+  }
 }
 
 
