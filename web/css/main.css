@@ -53,6 +53,12 @@
     font-family: 'Roboto', sans-serif;
     font-size: 2em;
   }
+
+  div#mycamera{
+    float: left;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2em;
+  }
   
 
   div#info_UI{

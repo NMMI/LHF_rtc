@@ -1108,6 +1108,16 @@ function switch_camera(el_camera) {
   sendToServer(message_cam);
 }
 
+function mycamera_state(el_mycamera){
+  if (el_mycamera.checked) {
+    start_my_stream(webcamStream, video1);
+  }
+  else
+  {
+    stop_my_stream(webcamStream, video1);
+  }
+}
+
       
 
 function sleep(ms) {
@@ -1128,5 +1138,31 @@ function stop_my_stream(web_stream, local_stream)
       local_stream.srcObject.getTracks().forEach(track => {
         track.stop();
       });
+      local_stream.style.visibility = "hidden";
     }
+}
+
+async function start_my_stream(web_stream, local_stream)
+{
+  try {
+      web_stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+      local_stream.srcObject = web_stream;
+      local_stream.style.visibility = "visible";
+    } catch(err) {
+      handleGetUserMediaError(err);
+      return;
+    }
+
+
+  try 
+  {
+    web_stream.getTracks().forEach(
+      track => transceiver.sender.replaceTrack(track)
+    );
+  }
+  catch(err)
+  {
+      handleGetUserMediaError(err);
+  }
+
 }
