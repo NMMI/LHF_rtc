@@ -36,6 +36,7 @@ var robot_connected = false;
 var pilot_connected = false;
 var pc1 = null; // pilotPC
 var flag_disc_video = true;
+var mymap;
 
 // function log(text) {
 //   var time = new Date();
@@ -56,8 +57,10 @@ const SERVER_IP_ = window.location.hostname; // auto
 
 async function startupCode()
 {
-  var password = prompt("Please enter your password", "PASSWORD");
-  if (password == "lhfconnect") {
+  //var password = prompt("Please enter your password", "PASSWORD");
+  //if (password == "lhfconnect")
+  if (1) {
+    document.getElementById("container").style.display = "none";
     console.log("Start me up");
     document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
 
@@ -453,7 +456,7 @@ function connect() {
 
   connection.onopen = function(evt) {
     console.log("Connection established");
-    heartbeat();
+    //heartbeat();
     // document.getElementById("text").disabled = false;
     // document.getElementById("send").disabled = false;
   };
@@ -515,25 +518,34 @@ function connect() {
         console.log(msg);
         try {
               for (var i=0; i<msg.users.length; i++) {
-              if(msg.users[i] === "ROBOT") robot_connected = true;
-              else if(msg.users[i] === "PILOT") pilot_connected = true;
+                if(msg.users[i] === "ROBOT") {
+                  mymap = L.map('LHF_map').setView([41.9027, 12.4963], 5);
+                  var marker = L.marker([msg.position[i].latitude, msg.position[i].longitude]).addTo(mymap);
+                  marker.bindPopup("<button type=\"button\" onclick=\"invite_robot(msg.users[i])\">"+msg.users[i]+"</button>");
+                  robot_connected = true;
+                }
+                else if(msg.users[i] === "PILOT") pilot_connected = true;
               }
+
+              L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+              attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+              maxZoom: 18,
+              id: 'mapbox/streets-v11',
+              tileSize: 512,
+              zoomOffset: -1,
+              accessToken: 'pk.eyJ1IjoiZ2lhbGVuIiwiYSI6ImNrYWlmaDdqNTAwOWcycW1yeno4MGdkYXIifQ.IXYcOJBT3KMpEgI7bFZKyg'
+              }).addTo(mymap); 
             } catch(err_array) {
               console.log(err_array);
             }
         
-        if(robot_connected && pilot_connected && flag_disc_video) 
+        /*if(robot_connected && pilot_connected && flag_disc_video) 
           {
             console.log("SEND INVITE()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             flag_disc_video = false;
             invite();
-          }
+          }*/
         
-        // if(first_connection)
-        // {
-        //   invite();
-        //   first_connection = false;
-        // }
         
         break;
 

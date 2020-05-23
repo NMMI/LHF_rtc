@@ -11,8 +11,9 @@ function () {
 
   var count = 0;
   var instructions_text ="";
+  var positionArray = {};
   
-  var lastConnectionRequestUsername = "";
+  //var lastConnectionRequestUsername = "";
   
   function log(text) {
       var time = new Date();
@@ -34,7 +35,7 @@ function () {
   
   app_pilot.get("/", function(req, res) {
       console.log("Pilot is connecting");
-      lastConnectionRequestUsername = "PILOT";
+      //lastConnectionRequestUsername = "PILOT";
       res.sendFile(path.resolve(__dirname,'pilot.html'));
   
   });
@@ -60,7 +61,7 @@ function () {
   
   app_robot.get("/", function(req, res) {
       console.log("Robot is connecting");
-      lastConnectionRequestUsername = "ROBOT";
+      //lastConnectionRequestUsername = "ROBOT";
       res.sendFile(path.resolve(__dirname,'robot.html'));
   });
   
@@ -209,7 +210,8 @@ function () {
   function makeUserListMessage() {
       var userListMsg = {
         type: "userlist",
-        users: []
+        users: [],
+        position: []
       };
       var i;
     
@@ -217,6 +219,7 @@ function () {
     
       for (i=0; i<connectionArray.length; i++) {
         userListMsg.users.push(connectionArray[i].username);
+        userListMsg.position.push(positionArray[connectionArray[i].username]);
       }
     
       return userListMsg;
@@ -261,7 +264,7 @@ function () {
       var i=0;
       // var robotConnected = false;
       // var pilotConnected = false;
-      var alreadyConnectedUsername = "";
+      /*var alreadyConnectedUsername = "";
       for (i=0; i<connectionArray.length; i++) {
         console.log(connectionArray[i].username);
         if(connectionArray[i].username === "ROBOT") {
@@ -272,10 +275,10 @@ function () {
           // pilotConnected = true;
           alreadyConnectedUsername = "PILOT";
         }
-      }
-      console.log(`----------------------------------`);
+      }*/
+      /*console.log(`----------------------------------`);
       console.log('A new connection request arrived from: ' + lastConnectionRequestUsername);
-      console.log(`----------------------------------`);
+      console.log(`----------------------------------`);*/
   
       log("New connection attempt");
       if (!originIsAllowed(request.origin)) {
@@ -307,7 +310,7 @@ function () {
     
   
       // Allow invitation
-      if(alreadyConnectedUsername === "PILOT" && lastConnectionRequestUsername === "ROBOT")
+      /*if(alreadyConnectedUsername === "PILOT" && lastConnectionRequestUsername === "ROBOT")
       {
         console.log("PILOT already connected. ROBOT attempting to connect. Notifying PILOT");
         var msgInvite = {
@@ -317,7 +320,7 @@ function () {
         };
         // connection.sendUTF(JSON.stringify(msgInvite));
         sendToOneUser(msgInvite.to, JSON.stringify(msgInvite));
-      }
+      }*/
       //
   
       // Set up a handler for the "message" event received over WebSocket. This
@@ -421,6 +424,8 @@ function () {
               // list instead of just updating. It's horribly inefficient
               // but this is a demo. Don't do this in a real app.
               connect.username = msg.name;
+              positionArray[msg.name] = msg.position;
+
               sendUserListToAll();
               sendToClients = false;  // We already sent the proper responses
   

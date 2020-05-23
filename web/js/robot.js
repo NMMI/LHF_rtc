@@ -32,6 +32,9 @@ var num_recv = 0;
 var num_recv_lin = 0;
 var num_recv_ang = 0;
 var enable_cmd = false;
+var robot_position = {
+  
+};
 
 
 // fully automated connection via Node.js server
@@ -105,9 +108,19 @@ async function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
+  if (navigator.geolocation) {
+   await navigator.geolocation.getCurrentPosition(getPosition);
+  } else { 
+    alert("Geolocation is not supported by this browser.");
+  }
   console.log("Started!");
 }
 
+function getPosition(position) {
+  robot_position.latitude = position.coords.latitude;
+  robot_position.longitude = position.coords.longitude;
+  console.log(robot_position);
+}
 
 const video1 = document.querySelector('video#video1_robot');
 const video2 = document.querySelector('video#video2_robot');
@@ -345,6 +358,7 @@ function setUsername() {
 
   sendToServer({
     name: myUsername,
+    position: robot_position,
     date: Date.now(),
     id: clientID,
     type: "username"

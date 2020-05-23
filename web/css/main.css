@@ -126,7 +126,11 @@
     width: auto;
     border-radius: 10px;
   }
-
+  div#LHF_map{
+    height: 93vh;
+    width: auto;
+    z-index: 3;
+  }
   div#mySidebar{
     z-index: 3;
   }
