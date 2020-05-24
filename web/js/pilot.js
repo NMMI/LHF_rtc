@@ -36,7 +36,8 @@ var robot_connected = false;
 var pilot_connected = false;
 var pc1 = null; // pilotPC
 var flag_disc_video = true;
-var mymap;
+var mymap = null;
+var userArray = null;
 
 // function log(text) {
 //   var time = new Date();
@@ -61,6 +62,16 @@ async function startupCode()
   //if (password == "lhfconnect")
   if (1) {
     document.getElementById("container").style.display = "none";
+    mymap = L.map('LHF_map').setView([41.9027, 12.4963], 5);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+              attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+              maxZoom: 18,
+              id: 'mapbox/streets-v11',
+              tileSize: 512,
+              zoomOffset: -1,
+              accessToken: 'pk.eyJ1IjoiZ2lhbGVuIiwiYSI6ImNrYWlmaDdqNTAwOWcycW1yeno4MGdkYXIifQ.IXYcOJBT3KMpEgI7bFZKyg'
+              }).addTo(mymap); 
+    
     console.log("Start me up");
     document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
 
@@ -159,6 +170,8 @@ async function closingCode(){
 // make the offer.
 
 async function invite() {
+  show_pilot_interface();
+  targetUsername = event.target.id;
   console.log("Starting to prepare an invitation");
   if (pc1) {
     alert("You can't start a call because you already have one open!");
@@ -516,25 +529,17 @@ function connect() {
       case "userlist":      // Received an updated user list
         handleUserlistMsg(msg);
         console.log(msg);
+        userArray = msg.users.slice();
         try {
               for (var i=0; i<msg.users.length; i++) {
-                if(msg.users[i] === "ROBOT") {
-                  mymap = L.map('LHF_map').setView([41.9027, 12.4963], 5);
+                var sub_name = msg.users[i].substring(0, 5);
+                if(sub_name === "ROBOT") {
                   var marker = L.marker([msg.position[i].latitude, msg.position[i].longitude]).addTo(mymap);
-                  marker.bindPopup("<button type=\"button\" onclick=\"invite_robot(msg.users[i])\">"+msg.users[i]+"</button>");
+                  marker.bindPopup("<button id =" + msg.users[i] + " type=\"button\" onclick=\"invite()\">"+msg.users[i]+"</button>");
                   robot_connected = true;
                 }
-                else if(msg.users[i] === "PILOT") pilot_connected = true;
-              }
-
-              L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-              attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-              maxZoom: 18,
-              id: 'mapbox/streets-v11',
-              tileSize: 512,
-              zoomOffset: -1,
-              accessToken: 'pk.eyJ1IjoiZ2lhbGVuIiwiYSI6ImNrYWlmaDdqNTAwOWcycW1yeno4MGdkYXIifQ.IXYcOJBT3KMpEgI7bFZKyg'
-              }).addTo(mymap); 
+                else if(sub_name === "PILOT") pilot_connected = true;
+              }  
             } catch(err_array) {
               console.log(err_array);
             }
@@ -583,8 +588,6 @@ function connect() {
 
   
 }
-
-
 
 // Handles reporting errors. Currently, we just dump stuff to console but
 // in a real-world application, an appropriate (and user-friendly)
@@ -1175,5 +1178,12 @@ async function start_my_stream(web_stream, local_stream)
   {
       handleGetUserMediaError(err);
   }
+
+}
+
+function show_pilot_interface()
+{
+  document.getElementById("LHF_map").style.display = "none";
+  document.getElementById("container").style.display = "";
 
 }

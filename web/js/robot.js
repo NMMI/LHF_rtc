@@ -93,6 +93,11 @@ async function startupCode()
   .catch(function(err) {
     console.log(err.name + ": " + err.message);
   });
+
+  var position_tmp = await getPosition();  // wait for getPosition to complete
+  robot_position.latitude = position_tmp.coords.latitude;
+  robot_position.longitude = position_tmp.coords.longitude;
+
   console.log("Start me up");
 
   document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
@@ -108,19 +113,32 @@ async function startupCode()
   // starting negotiation
   console.log('Connecting to signaling server');
   connect();
-  if (navigator.geolocation) {
-   await navigator.geolocation.getCurrentPosition(getPosition);
-  } else { 
-    alert("Geolocation is not supported by this browser.");
-  }
+  
   console.log("Started!");
 }
 
-function getPosition(position) {
+function getPosition() {
+    // Simple wrapper
+    return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(res, rej);
+    });
+}
+/*function getPosition(position) {
   robot_position.latitude = position.coords.latitude;
   robot_position.longitude = position.coords.longitude;
+  console.log("robot_position!!!!!!!!!!!!!!!!!!!!!!");
   console.log(robot_position);
 }
+
+async function reqPosition() {
+  if (navigator.geolocation) {
+   navigator.geolocation.getCurrentPosition(getPosition);
+  } else { 
+    alert("Geolocation is not supported by this browser.");
+  }
+  return true;
+}*/
+
 
 const video1 = document.querySelector('video#video1_robot');
 const video2 = document.querySelector('video#video2_robot');
