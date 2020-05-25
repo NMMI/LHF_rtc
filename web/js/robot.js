@@ -33,6 +33,12 @@ var num_recv_lin = 0;
 var num_recv_ang = 0;
 var enable_cmd = false;
 
+var commandArray = [];
+var teach_recording = false;
+var firstCommand = false;
+var old_command = null;
+var time_start = Date.now();
+var delta_t = 0;
 
 // fully automated connection via Node.js server
 window.onload = startupCode;
@@ -412,7 +418,7 @@ function connect() {
     console.log('error'); 
   };
 
-  connection.onmessage = function(evt) {
+  connection.onmessage = async function(evt) {
     var chatBox = document.querySelector(".chatbox");
     var text = "";
     console.log('Guarda qua');
@@ -493,6 +499,34 @@ function connect() {
             connectionCheckbox.checked = scan_conn_flag_;
             break;
 
+      case "teach-message":
+        console.log("Received teach-message");
+        switch(msg.state)
+        {
+          case "record":
+            console.log("Recording path: start");
+            teach_recording = true;
+            firstCommand = true;
+            break;
+          case "stop":
+            console.log("Recording path: stop");
+            delta_t = Date.now() - time_start;
+            commandArray.push({time: delta_t, vel_lin: old_command.value_lin, vel_ang: old_command.value_ang});
+            teach_recording = false;
+            break;
+          case "play":
+            console.log("Play");
+            for (var i=0; i<commandArray.length; i++)
+            {
+              vel_lin = commandArray[i].vel_lin;
+              vel_ang = commandArray[i].vel_ang;
+              console.log("Command " + i + " - Duration: " + commandArray[i].time + " vel_lin: " + vel_lin + " vel_ang: " + vel_ang);
+              await sleep(commandArray[i].time);   
+            }
+            break;
+        }
+        break;
+
       case "joy-message":
             console.log("--------------------------------");
             console.log("SINGLE JOYSTICK Message in a bottle!");
@@ -503,6 +537,26 @@ function connect() {
             vel_ang = msg.value_ang;
             num_recv += 1;
             div_num_recv.innerHTML = `# num_recv = ${num_recv}`;
+
+            if(teach_recording)
+            {
+              if(firstCommand)
+              {
+                time_start = Date.now();
+                console.log('Time start '+time_start);
+                firstCommand = false;
+              }
+              else
+              {
+                delta_t = Date.now() - time_start;
+                console.log("Delta_t: " + delta_t);
+                commandArray.push({time: delta_t, vel_lin: old_command.value_lin, vel_ang: old_command.value_ang});
+                time_start = Date.now();
+              }
+              
+              old_command = msg;
+            }
+            
             compute_vel();
             break;
 

@@ -361,6 +361,11 @@ function () {
               sendToOneUser(msg.target, JSON.stringify(msg));
               sendToClients = false;  // We already sent the proper responses
               break;
+
+            case "teach-message":
+              sendToOneUser(msg.target, JSON.stringify(msg));
+              sendToClients = false;  // We already sent the proper responses
+              break;
   
             case "joy-message":
               //console.log("--------------------------------");

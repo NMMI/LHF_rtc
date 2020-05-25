@@ -9,7 +9,6 @@
 'use strict';
 
 
-
 var myUsername = "PILOT";
 var targetUsername = "ROBOT";
 
@@ -37,6 +36,7 @@ var pilot_connected = false;
 var pc1 = null; // pilotPC
 var flag_disc_video = true;
 
+var teachingState = "";
 // function log(text) {
 //   var time = new Date();
 
@@ -453,7 +453,7 @@ function connect() {
 
   connection.onopen = function(evt) {
     console.log("Connection established");
-    heartbeat();
+    // heartbeat();
     // document.getElementById("text").disabled = false;
     // document.getElementById("send").disabled = false;
   };
@@ -989,7 +989,8 @@ function sendMessageJoy(v_lin, v_ang)
     target: targetUsername,
     type: "joy-message",
     value_lin: parseInt(v_lin,10),
-    value_ang: parseInt(v_ang,10)
+    value_ang: parseInt(v_ang,10),
+    autonomous: teachingState
   };
   sendToServer(message_joy);
 }
@@ -1164,4 +1165,15 @@ async function start_my_stream(web_stream, local_stream)
       handleGetUserMediaError(err);
   }
 
+}
+
+function statusTeaching()
+{
+  var message_teaching = { 
+    name: myUsername,
+    target: targetUsername,
+    type: "teach-message",
+    state: event.target.id
+  };
+  sendToServer(message_teaching);
 }
