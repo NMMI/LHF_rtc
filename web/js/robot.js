@@ -521,6 +521,7 @@ function connect() {
               vel_lin = commandArray[i].vel_lin;
               vel_ang = commandArray[i].vel_ang;
               console.log("Command " + i + " - Duration: " + commandArray[i].time + " vel_lin: " + vel_lin + " vel_ang: " + vel_ang);
+              compute_vel();
               await sleep(commandArray[i].time);   
             }
             break;
