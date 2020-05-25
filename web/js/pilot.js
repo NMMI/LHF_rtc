@@ -38,7 +38,31 @@ var pc1 = null; // pilotPC
 var flag_disc_video = true;
 var mymap = null;
 var userArray = null;
+var user_position = {
+  
+};
 
+var lhfIcon = L.icon({
+    iconUrl: '../img/lhf_pin.png',
+    //shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [60, 60], // size of the icon
+    //shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [30, 59], // point of the icon which will correspond to marker's location
+    //shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+var userIcon = L.icon({
+    iconUrl: '../img/user_pin.png',
+    //shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [60, 60], // size of the icon
+    //shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [30, 59], // point of the icon which will correspond to marker's location
+    //shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
 // function log(text) {
 //   var time = new Date();
 
@@ -58,10 +82,10 @@ const SERVER_IP_ = window.location.hostname; // auto
 
 async function startupCode()
 {
-  //var password = prompt("Please enter your password", "PASSWORD");
-  //if (password == "lhfconnect")
-  if (1) {
-    document.getElementById("container").style.display = "none";
+  document.getElementById("container").style.display = "none";
+  var password = prompt("Please enter your password", "PASSWORD");
+  if (password == "lhfconnect"){
+  //if (1) {
     mymap = L.map('LHF_map').setView([41.9027, 12.4963], 5);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
               attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -69,8 +93,12 @@ async function startupCode()
               id: 'mapbox/streets-v11',
               tileSize: 512,
               zoomOffset: -1,
-              accessToken: 'pk.eyJ1IjoiZ2lhbGVuIiwiYSI6ImNrYWlmaDdqNTAwOWcycW1yeno4MGdkYXIifQ.IXYcOJBT3KMpEgI7bFZKyg'
-              }).addTo(mymap); 
+              accessToken: 'pk.eyJ1IjoiZ2lhbGVuIiwiYSI6ImNrYWxmNnlscDA5aTEycm5xajlpYjZydDIifQ.mcEWW2aZ3Bl5hpsglsBVLw'
+              }).addTo(mymap);
+
+    var position_tmp = await getPosition();  // wait for getPosition to complete
+    user_position.latitude = position_tmp.coords.latitude;
+    user_position.longitude = position_tmp.coords.longitude;
     
     console.log("Start me up");
     document.getElementById('ip_address').innerHTML = 'Indirizzo server: ' + SERVER_IP_;
@@ -93,6 +121,12 @@ async function startupCode()
   }
 }
 
+function getPosition() {
+    // Simple wrapper
+    return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(res, rej);
+    });
+}
 
 const video1 = document.querySelector('video#video1_pilot');
 const video2 = document.querySelector('video#video2_pilot');
@@ -104,6 +138,7 @@ var instance = panzoom(video2, {minZoom: 1, maxZoom: 8,  bounds: true, boundsPad
 const audioCheckbox = document.querySelector('input#audio');
 const info_UI = document.getElementById('info_UI');
 const div_num_recv = document.getElementById('div_num_recv');
+const mapCheckbox = document.querySelector('input#map_switch');
 //const div_num_recv_ang = document.getElementById('div_num_recv_ang');
 
 //const messageButton = document.querySelector('button#messageBtn');
@@ -170,8 +205,10 @@ async function closingCode(){
 // make the offer.
 
 async function invite() {
+  closeVideoCall();
   show_pilot_interface();
-  targetUsername = event.target.id;
+  mapCheckbox.checked = false;
+  targetUsername = event.target.name;
   console.log("Starting to prepare an invitation");
   if (pc1) {
     alert("You can't start a call because you already have one open!");
@@ -386,6 +423,7 @@ function setUsername() {
 
   sendToServer({
     name: myUsername,
+    position: user_position,
     date: Date.now(),
     id: clientID,
     type: "username"
@@ -534,11 +572,14 @@ function connect() {
               for (var i=0; i<msg.users.length; i++) {
                 var sub_name = msg.users[i].substring(0, 5);
                 if(sub_name === "ROBOT") {
-                  var marker = L.marker([msg.position[i].latitude, msg.position[i].longitude]).addTo(mymap);
-                  marker.bindPopup("<button id =" + msg.users[i] + " type=\"button\" onclick=\"invite()\">"+msg.users[i]+"</button>");
+                  var marker_robot = L.marker([msg.position[i].latitude, msg.position[i].longitude], {icon: lhfIcon}).addTo(mymap);
+                  marker_robot.bindPopup("<h1>"+ msg.users[i] + "</h1> <button id = \"btn_robot\" name =" + msg.users[i] + " type=\"button\" onclick=\"invite()\">Connect</button>");
                   robot_connected = true;
                 }
-                else if(sub_name === "PILOT") pilot_connected = true;
+                else if(sub_name === "PILOT"){
+                  var marker_user = L.marker([msg.position[i].latitude, msg.position[i].longitude], {icon: userIcon}).addTo(mymap);
+                  pilot_connected = true;
+                } 
               }  
             } catch(err_array) {
               console.log(err_array);
@@ -811,7 +852,7 @@ function closeVideoCall() {
   // Disable the hangup button
 
   // document.getElementById("hangup-button").disabled = true;
-  // targetUsername = null;
+  targetUsername = null;
 }
 
 // Handle errors which occur when trying to access the local media
@@ -1132,6 +1173,16 @@ function mycamera_state(el_mycamera){
   }
 }
 
+function switch_map(el_map){
+  if (el_map.checked) {
+    show_map();
+  }
+  else
+  {
+    show_pilot_interface();
+  }
+}
+
       
 
 function sleep(ms) {
@@ -1185,5 +1236,12 @@ function show_pilot_interface()
 {
   document.getElementById("LHF_map").style.display = "none";
   document.getElementById("container").style.display = "";
+
+}
+
+function show_map()
+{
+  document.getElementById("LHF_map").style.display = "";
+  document.getElementById("container").style.display = "none";
 
 }

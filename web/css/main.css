@@ -30,6 +30,15 @@
     padding: 0.5em 0.7em 0.6em 0.7em;
   }
 
+  button#btn_robot{
+    background-color: #009688; /* Green */
+    border: none;
+    color: white;
+    margin:0 auto;
+    display:block;
+    font-size: 20px;
+  }
+
   div#audio{
     float: left;
     font-family: 'Roboto', sans-serif;
@@ -55,6 +64,12 @@
   }
 
   div#mycamera{
+    float: left;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2em;
+  }
+
+  div#map_switch{
     float: left;
     font-family: 'Roboto', sans-serif;
     font-size: 2em;
@@ -132,7 +147,7 @@
     z-index: 3;
   }
   div#mySidebar{
-    z-index: 3;
+    z-index: 4;
   }
 
   /*div#videos {
